@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="127b574b23ad4bafa620b998c093d8fb" Name="Diagram1">
+        <EntityTypeShape EntityType="StockDbModel.AspNetRoleClaims" Width="1.5" PointX="3" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="StockDbModel.AspNetRoles" Width="1.5" PointX="0.75" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="StockDbModel.AspNetUserClaims" Width="1.5" PointX="5.25" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="StockDbModel.AspNetUserLogins" Width="1.5" PointX="5.25" PointY="6.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="StockDbModel.AspNetUsers" Width="1.5" PointX="3" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="StockDbModel.AspNetUserTokens" Width="1.5" PointX="7.75" PointY="4.75" IsExpanded="true" />
+        <AssociationConnector Association="StockDbModel.FK_AspNetRoleClaims_AspNetRoles_RoleId" ManuallyRouted="false" />
+        <AssociationConnector Association="StockDbModel.FK_AspNetUserClaims_AspNetUsers_UserId" ManuallyRouted="false" />
+        <AssociationConnector Association="StockDbModel.FK_AspNetUserLogins_AspNetUsers_UserId" ManuallyRouted="false" />
+        <AssociationConnector Association="StockDbModel.AspNetUserRoles" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="StockDbModel.Offer" Width="1.5" PointX="6" PointY="10" />
+        <EntityTypeShape EntityType="StockDbModel.OfferItems" Width="1.5" PointX="8.25" PointY="8.25" />
+        <EntityTypeShape EntityType="StockDbModel.Place" Width="1.5" PointX="3.75" PointY="10" />
+        <AssociationConnector Association="StockDbModel.FK_OfferItems_OwnerUserId" />
+        <AssociationConnector Association="StockDbModel.FK_Offer_PlaceId" />
+        <AssociationConnector Association="StockDbModel.FK_OfferItems_OfferId" />
+        <AssociationConnector Association="StockDbModel.PlaceUserPermissions" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

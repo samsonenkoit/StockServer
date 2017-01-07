@@ -1,0 +1,64 @@
+@model StockServer.Models.OfferViewModels.CreateEditOfferView
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<form asp-action="Create" >
+    <div class="form-horizontal">
+        <h4>OfferViewModel</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>        
+        <div class="form-group">
+            <label asp-for="@Model.Offer.Title" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="@Model.Offer.Title" class="form-control" />
+                <span asp-validation-for="@Model.Offer.Title" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Offer.Description" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="@Model.Offer.Description" class="form-control" />
+                <span asp-validation-for="@Model.Offer.Description" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Offer.Price" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="@Model.Offer.Price" class="form-control" />
+                <span asp-validation-for="@Model.Offer.Price" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="@Model.Offer.IsActive" />
+                    <label asp-for="@Model.Offer.IsActive"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Offer.PlaceId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(t => t.Offer.PlaceId, Model.Places, new { @class = "form-control"})
+                <span asp-validation-for="Offer.PlaceId" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
