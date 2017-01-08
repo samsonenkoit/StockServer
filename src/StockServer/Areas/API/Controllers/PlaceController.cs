@@ -15,6 +15,7 @@ namespace StockServer.Areas.API.Controllers
 {
     [Area("api")]
     [Produces("application/json")]
+    [Authorize(ActiveAuthenticationSchemes = "JwtAuth")]
     public class PlaceController : Controller
     {
         private readonly IPlaceProvider _placeProvider;
@@ -32,7 +33,6 @@ namespace StockServer.Areas.API.Controllers
             _userManager = userManager;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetByPoint(double lat, double lon, double radius, int limit = 1000)
         {

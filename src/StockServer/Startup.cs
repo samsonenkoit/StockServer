@@ -23,7 +23,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace StockServer
 {
-    public class Startup
+    public partial class Startup
     {
         public Startup(IHostingEnvironment env)
         {
@@ -111,8 +111,8 @@ namespace StockServer
 
             app.UseStaticFiles();
 
-            app.UseIdentity();
-            
+            ConfigureAuth(app);
+
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
 
             app.UseMvc(routes =>
