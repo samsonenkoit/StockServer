@@ -12,14 +12,18 @@ namespace StockServer.DL
     using System;
     using System.Collections.Generic;
     
-    public partial class OfferItems
+    public partial class OfferTransactionType
     {
-        public int Id { get; set; }
-        public int OfferId { get; set; }
-        public int StateId { get; set; }
-        public string OwnerUserId { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public OfferTransactionType()
+        {
+            this.OfferTransactions = new HashSet<OfferTransactions>();
+        }
     
-        public virtual AspNetUsers AspNetUsers { get; set; }
-        public virtual Offer Offer { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OfferTransactions> OfferTransactions { get; set; }
     }
 }

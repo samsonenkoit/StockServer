@@ -12,23 +12,25 @@ namespace StockServer.DL
     using System;
     using System.Collections.Generic;
     
-    public partial class Offer
+    public partial class PointTransactions
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Offer()
+        public PointTransactions()
         {
             this.OfferTransactions = new HashSet<OfferTransactions>();
         }
     
         public int Id { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public decimal Price { get; set; }
-        public bool IsActive { get; set; }
-        public int PlaceId { get; set; }
+        public System.DateTime CreateDate { get; set; }
+        public string CreateUserId { get; set; }
+        public string UserId { get; set; }
+        public int Amount { get; set; }
+        public int TypeId { get; set; }
     
-        public virtual Place Place { get; set; }
+        public virtual AspNetUsers AspNetUsers { get; set; }
+        public virtual AspNetUsers AspNetUsers1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OfferTransactions> OfferTransactions { get; set; }
+        public virtual PointTransactionType PointTransactionType { get; set; }
     }
 }

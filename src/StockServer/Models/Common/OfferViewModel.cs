@@ -17,5 +17,6 @@ namespace StockServer.Models.Common
         public decimal Price { get; set; }
         public bool IsActive { get; set; }
         public int PlaceId { get; set; }
+        public int AvailableAmount { get; set; }
     }
 }

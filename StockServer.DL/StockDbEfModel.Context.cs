@@ -12,6 +12,8 @@ namespace StockServer.DL
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class StockDbEntities : DbContext
     {
@@ -32,7 +34,36 @@ namespace StockServer.DL
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
         public virtual DbSet<Offer> Offer { get; set; }
-        public virtual DbSet<OfferItems> OfferItems { get; set; }
+        public virtual DbSet<OfferTransactions> OfferTransactions { get; set; }
+        public virtual DbSet<OfferTransactionType> OfferTransactionType { get; set; }
         public virtual DbSet<Place> Place { get; set; }
+        public virtual DbSet<PointTransactions> PointTransactions { get; set; }
+        public virtual DbSet<PointTransactionType> PointTransactionType { get; set; }
+        public virtual DbSet<UserOfferDelivery> UserOfferDelivery { get; set; }
+    
+        public virtual int BuyOfferProcedure(string createUserId, string buyUserId, Nullable<int> offerId, Nullable<System.DateTime> createDate, Nullable<int> amount)
+        {
+            var createUserIdParameter = createUserId != null ?
+                new ObjectParameter("createUserId", createUserId) :
+                new ObjectParameter("createUserId", typeof(string));
+    
+            var buyUserIdParameter = buyUserId != null ?
+                new ObjectParameter("buyUserId", buyUserId) :
+                new ObjectParameter("buyUserId", typeof(string));
+    
+            var offerIdParameter = offerId.HasValue ?
+                new ObjectParameter("offerId", offerId) :
+                new ObjectParameter("offerId", typeof(int));
+    
+            var createDateParameter = createDate.HasValue ?
+                new ObjectParameter("createDate", createDate) :
+                new ObjectParameter("createDate", typeof(System.DateTime));
+    
+            var amountParameter = amount.HasValue ?
+                new ObjectParameter("amount", amount) :
+                new ObjectParameter("amount", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("BuyOfferProcedure", createUserIdParameter, buyUserIdParameter, offerIdParameter, createDateParameter, amountParameter);
+        }
     }
 }

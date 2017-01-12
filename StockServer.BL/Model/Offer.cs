@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace StockServer.BL.Model
 {
-    public class Offer
+    public class Offer: OfferInfo
     {
-        public int Id { get; set; }
-        public string Title { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
         public bool IsActive { get; set; }
-        public int PlaceId { get; set; }
+        public int AvailableAmount { get; set; }
     }
 }

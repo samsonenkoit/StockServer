@@ -92,14 +92,25 @@
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="PlaceId" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="OfferItems">
+        <EntityType Name="OfferTransactions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="CreateUserId" Type="nvarchar" MaxLength="450" Nullable="false" />
+          <Property Name="OfferId" Type="int" Nullable="false" />
+          <Property Name="BuyUserId" Type="nvarchar" MaxLength="450" />
+          <Property Name="Amount" Type="int" Nullable="false" />
+          <Property Name="PointTransactionId" Type="int" />
+          <Property Name="TypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OfferTransactionType">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" Nullable="false" />
-          <Property Name="OfferId" Type="int" Nullable="false" />
-          <Property Name="StateId" Type="int" Nullable="false" />
-          <Property Name="OwnerUserId" Type="nvarchar" MaxLength="450" />
+          <Property Name="Name" Type="nvarchar" MaxLength="450" Nullable="false" />
         </EntityType>
         <EntityType Name="Place">
           <Key>
@@ -120,6 +131,33 @@
           </Key>
           <Property Name="UserId" Type="nvarchar" MaxLength="450" Nullable="false" />
           <Property Name="PlaceId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PointTransactions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="CreateUserId" Type="nvarchar" MaxLength="450" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="450" Nullable="false" />
+          <Property Name="Amount" Type="int" Nullable="false" />
+          <Property Name="TypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PointTransactionType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="450" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserOfferDelivery">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="CreateUserId" Type="nvarchar" MaxLength="450" Nullable="false" />
+          <Property Name="OfferTransactionId" Type="int" Nullable="false" />
         </EntityType>
         <Association Name="FK_AspNetRoleClaims_AspNetRoles_RoleId">
           <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1">
@@ -203,27 +241,63 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_OfferItems_OfferId">
-          <End Role="Offer" Type="Self.Offer" Multiplicity="1" />
-          <End Role="OfferItems" Type="Self.OfferItems" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Offer">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="OfferItems">
-              <PropertyRef Name="OfferId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OfferItems_OwnerUserId">
+        <Association Name="FK_OfferTransactions_BuyUserId">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
-          <End Role="OfferItems" Type="Self.OfferItems" Multiplicity="*" />
+          <End Role="OfferTransactions" Type="Self.OfferTransactions" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AspNetUsers">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="OfferItems">
-              <PropertyRef Name="OwnerUserId" />
+            <Dependent Role="OfferTransactions">
+              <PropertyRef Name="BuyUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OfferTransactions_CreateUserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="OfferTransactions" Type="Self.OfferTransactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OfferTransactions">
+              <PropertyRef Name="CreateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OfferTransactions_OfferId">
+          <End Role="Offer" Type="Self.Offer" Multiplicity="1" />
+          <End Role="OfferTransactions" Type="Self.OfferTransactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Offer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OfferTransactions">
+              <PropertyRef Name="OfferId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OfferTransactions_PointTransactionId">
+          <End Role="PointTransactions" Type="Self.PointTransactions" Multiplicity="0..1" />
+          <End Role="OfferTransactions" Type="Self.OfferTransactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PointTransactions">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OfferTransactions">
+              <PropertyRef Name="PointTransactionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OfferTransactions_TypeId">
+          <End Role="OfferTransactionType" Type="Self.OfferTransactionType" Multiplicity="1" />
+          <End Role="OfferTransactions" Type="Self.OfferTransactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OfferTransactionType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OfferTransactions">
+              <PropertyRef Name="TypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -251,6 +325,73 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_PointTransactions_CreateUserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="PointTransactions" Type="Self.PointTransactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PointTransactions">
+              <PropertyRef Name="CreateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PointTransactions_TypeId">
+          <End Role="PointTransactionType" Type="Self.PointTransactionType" Multiplicity="1" />
+          <End Role="PointTransactions" Type="Self.PointTransactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PointTransactionType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PointTransactions">
+              <PropertyRef Name="TypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PointTransactions_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="PointTransactions" Type="Self.PointTransactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PointTransactions">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserOfferDelivery_CreateUserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="UserOfferDelivery" Type="Self.UserOfferDelivery" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserOfferDelivery">
+              <PropertyRef Name="CreateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserOfferDelivery_OfferTransactionId">
+          <End Role="OfferTransactions" Type="Self.OfferTransactions" Multiplicity="1" />
+          <End Role="UserOfferDelivery" Type="Self.UserOfferDelivery" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OfferTransactions">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserOfferDelivery">
+              <PropertyRef Name="OfferTransactionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="BuyOfferProcedure" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="createUserId" Type="nvarchar" Mode="In" />
+          <Parameter Name="buyUserId" Type="nvarchar" Mode="In" />
+          <Parameter Name="offerId" Type="int" Mode="In" />
+          <Parameter Name="createDate" Type="datetime" Mode="In" />
+          <Parameter Name="amount" Type="int" Mode="In" />
+        </Function>
         <EntityContainer Name="StockDbModelStoreContainer">
           <EntitySet Name="AspNetRoleClaims" EntityType="Self.AspNetRoleClaims" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
@@ -260,9 +401,13 @@
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUserTokens" EntityType="Self.AspNetUserTokens" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Offer" EntityType="Self.Offer" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="OfferItems" EntityType="Self.OfferItems" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OfferTransactions" EntityType="Self.OfferTransactions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OfferTransactionType" EntityType="Self.OfferTransactionType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Place" EntityType="Self.Place" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PlaceUserPermissions" EntityType="Self.PlaceUserPermissions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PointTransactions" EntityType="Self.PointTransactions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PointTransactionType" EntityType="Self.PointTransactionType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserOfferDelivery" EntityType="Self.UserOfferDelivery" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_AspNetRoleClaims_AspNetRoles_RoleId" Association="Self.FK_AspNetRoleClaims_AspNetRoles_RoleId">
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="AspNetRoleClaims" EntitySet="AspNetRoleClaims" />
@@ -287,13 +432,25 @@
             <End Role="Place" EntitySet="Place" />
             <End Role="Offer" EntitySet="Offer" />
           </AssociationSet>
-          <AssociationSet Name="FK_OfferItems_OfferId" Association="Self.FK_OfferItems_OfferId">
-            <End Role="Offer" EntitySet="Offer" />
-            <End Role="OfferItems" EntitySet="OfferItems" />
-          </AssociationSet>
-          <AssociationSet Name="FK_OfferItems_OwnerUserId" Association="Self.FK_OfferItems_OwnerUserId">
+          <AssociationSet Name="FK_OfferTransactions_BuyUserId" Association="Self.FK_OfferTransactions_BuyUserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="OfferItems" EntitySet="OfferItems" />
+            <End Role="OfferTransactions" EntitySet="OfferTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OfferTransactions_CreateUserId" Association="Self.FK_OfferTransactions_CreateUserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="OfferTransactions" EntitySet="OfferTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OfferTransactions_OfferId" Association="Self.FK_OfferTransactions_OfferId">
+            <End Role="Offer" EntitySet="Offer" />
+            <End Role="OfferTransactions" EntitySet="OfferTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OfferTransactions_PointTransactionId" Association="Self.FK_OfferTransactions_PointTransactionId">
+            <End Role="PointTransactions" EntitySet="PointTransactions" />
+            <End Role="OfferTransactions" EntitySet="OfferTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OfferTransactions_TypeId" Association="Self.FK_OfferTransactions_TypeId">
+            <End Role="OfferTransactionType" EntitySet="OfferTransactionType" />
+            <End Role="OfferTransactions" EntitySet="OfferTransactions" />
           </AssociationSet>
           <AssociationSet Name="FK_PlaceUserPermissions_PlaceId" Association="Self.FK_PlaceUserPermissions_PlaceId">
             <End Role="Place" EntitySet="Place" />
@@ -302,6 +459,26 @@
           <AssociationSet Name="FK_PlaceUserPermissions_UserId" Association="Self.FK_PlaceUserPermissions_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="PlaceUserPermissions" EntitySet="PlaceUserPermissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PointTransactions_CreateUserId" Association="Self.FK_PointTransactions_CreateUserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="PointTransactions" EntitySet="PointTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PointTransactions_TypeId" Association="Self.FK_PointTransactions_TypeId">
+            <End Role="PointTransactionType" EntitySet="PointTransactionType" />
+            <End Role="PointTransactions" EntitySet="PointTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PointTransactions_UserId" Association="Self.FK_PointTransactions_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="PointTransactions" EntitySet="PointTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserOfferDelivery_CreateUserId" Association="Self.FK_UserOfferDelivery_CreateUserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="UserOfferDelivery" EntitySet="UserOfferDelivery" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserOfferDelivery_OfferTransactionId" Association="Self.FK_UserOfferDelivery_OfferTransactionId">
+            <End Role="OfferTransactions" EntitySet="OfferTransactions" />
+            <End Role="UserOfferDelivery" EntitySet="UserOfferDelivery" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -372,9 +549,13 @@
           <NavigationProperty Name="AspNetUserClaims" Relationship="Self.FK_AspNetUserClaims_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
           <NavigationProperty Name="AspNetUserLogins" Relationship="Self.FK_AspNetUserLogins_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
           <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
-          <NavigationProperty Name="OfferItems" Relationship="StockDbModel.FK_OfferItems_OwnerUserId" FromRole="AspNetUsers" ToRole="OfferItems" />
+          <NavigationProperty Name="OfferTransactions" Relationship="StockDbModel.FK_OfferTransactions_BuyUserId" FromRole="AspNetUsers" ToRole="OfferTransactions" />
+          <NavigationProperty Name="OfferTransactions1" Relationship="StockDbModel.FK_OfferTransactions_CreateUserId" FromRole="AspNetUsers" ToRole="OfferTransactions" />
+          <NavigationProperty Name="PointTransactions" Relationship="StockDbModel.FK_PointTransactions_CreateUserId" FromRole="AspNetUsers" ToRole="PointTransactions" />
+          <NavigationProperty Name="PointTransactions1" Relationship="StockDbModel.FK_PointTransactions_UserId" FromRole="AspNetUsers" ToRole="PointTransactions" />
           <NavigationProperty Name="Place" Relationship="StockDbModel.PlaceUserPermissions" FromRole="AspNetUsers" ToRole="Place" />
-        </EntityType>
+          <NavigationProperty Name="UserOfferDelivery" Relationship="StockDbModel.FK_UserOfferDelivery_CreateUserId" FromRole="AspNetUsers" ToRole="UserOfferDelivery" />
+          </EntityType>
         <EntityType Name="AspNetUserTokens">
           <Key>
             <PropertyRef Name="UserId" />
@@ -455,24 +636,67 @@
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
+          <FunctionImport Name="BuyOfferProcedure">
+            <Parameter Name="createUserId" Mode="In" Type="String" />
+            <Parameter Name="buyUserId" Mode="In" Type="String" />
+            <Parameter Name="offerId" Mode="In" Type="Int32" />
+            <Parameter Name="createDate" Mode="In" Type="DateTime" />
+            <Parameter Name="amount" Mode="In" Type="Int32" />
+          </FunctionImport>
           <EntitySet Name="Offer" EntityType="StockDbModel.Offer" />
-          <EntitySet Name="OfferItems" EntityType="StockDbModel.OfferItems" />
+          <EntitySet Name="OfferTransactions" EntityType="StockDbModel.OfferTransactions" />
+          <EntitySet Name="OfferTransactionType" EntityType="StockDbModel.OfferTransactionType" />
           <EntitySet Name="Place" EntityType="StockDbModel.Place" />
-          <AssociationSet Name="FK_OfferItems_OwnerUserId" Association="StockDbModel.FK_OfferItems_OwnerUserId">
+          <EntitySet Name="PointTransactions" EntityType="StockDbModel.PointTransactions" />
+          <EntitySet Name="PointTransactionType" EntityType="StockDbModel.PointTransactionType" />
+          <AssociationSet Name="FK_OfferTransactions_BuyUserId" Association="StockDbModel.FK_OfferTransactions_BuyUserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="OfferItems" EntitySet="OfferItems" />
+            <End Role="OfferTransactions" EntitySet="OfferTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OfferTransactions_CreateUserId" Association="StockDbModel.FK_OfferTransactions_CreateUserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="OfferTransactions" EntitySet="OfferTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PointTransactions_CreateUserId" Association="StockDbModel.FK_PointTransactions_CreateUserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="PointTransactions" EntitySet="PointTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PointTransactions_UserId" Association="StockDbModel.FK_PointTransactions_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="PointTransactions" EntitySet="PointTransactions" />
           </AssociationSet>
           <AssociationSet Name="FK_Offer_PlaceId" Association="StockDbModel.FK_Offer_PlaceId">
             <End Role="Place" EntitySet="Place" />
             <End Role="Offer" EntitySet="Offer" />
           </AssociationSet>
-          <AssociationSet Name="FK_OfferItems_OfferId" Association="StockDbModel.FK_OfferItems_OfferId">
+          <AssociationSet Name="FK_OfferTransactions_OfferId" Association="StockDbModel.FK_OfferTransactions_OfferId">
             <End Role="Offer" EntitySet="Offer" />
-            <End Role="OfferItems" EntitySet="OfferItems" />
+            <End Role="OfferTransactions" EntitySet="OfferTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OfferTransactions_PointTransactionId" Association="StockDbModel.FK_OfferTransactions_PointTransactionId">
+            <End Role="PointTransactions" EntitySet="PointTransactions" />
+            <End Role="OfferTransactions" EntitySet="OfferTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OfferTransactions_TypeId" Association="StockDbModel.FK_OfferTransactions_TypeId">
+            <End Role="OfferTransactionType" EntitySet="OfferTransactionType" />
+            <End Role="OfferTransactions" EntitySet="OfferTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PointTransactions_TypeId" Association="StockDbModel.FK_PointTransactions_TypeId">
+            <End Role="PointTransactionType" EntitySet="PointTransactionType" />
+            <End Role="PointTransactions" EntitySet="PointTransactions" />
           </AssociationSet>
           <AssociationSet Name="PlaceUserPermissions" Association="StockDbModel.PlaceUserPermissions">
             <End Role="Place" EntitySet="Place" />
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <EntitySet Name="UserOfferDelivery" EntityType="StockDbModel.UserOfferDelivery" />
+          <AssociationSet Name="FK_UserOfferDelivery_CreateUserId" Association="StockDbModel.FK_UserOfferDelivery_CreateUserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="UserOfferDelivery" EntitySet="UserOfferDelivery" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserOfferDelivery_OfferTransactionId" Association="StockDbModel.FK_UserOfferDelivery_OfferTransactionId">
+            <End Role="OfferTransactions" EntitySet="OfferTransactions" />
+            <End Role="UserOfferDelivery" EntitySet="UserOfferDelivery" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Offer">
@@ -486,18 +710,34 @@
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="PlaceId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Place" Relationship="StockDbModel.FK_Offer_PlaceId" FromRole="Offer" ToRole="Place" />
-          <NavigationProperty Name="OfferItems" Relationship="StockDbModel.FK_OfferItems_OfferId" FromRole="Offer" ToRole="OfferItems" />
+          <NavigationProperty Name="OfferTransactions" Relationship="StockDbModel.FK_OfferTransactions_OfferId" FromRole="Offer" ToRole="OfferTransactions" />
         </EntityType>
-        <EntityType Name="OfferItems">
+        <EntityType Name="OfferTransactions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreateUserId" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="OfferId" Type="Int32" Nullable="false" />
+          <Property Name="BuyUserId" Type="String" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
+          <Property Name="PointTransactionId" Type="Int32" />
+          <Property Name="TypeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AspNetUsers" Relationship="StockDbModel.FK_OfferTransactions_BuyUserId" FromRole="OfferTransactions" ToRole="AspNetUsers" />
+          <NavigationProperty Name="AspNetUsers1" Relationship="StockDbModel.FK_OfferTransactions_CreateUserId" FromRole="OfferTransactions" ToRole="AspNetUsers" />
+          <NavigationProperty Name="Offer" Relationship="StockDbModel.FK_OfferTransactions_OfferId" FromRole="OfferTransactions" ToRole="Offer" />
+          <NavigationProperty Name="PointTransactions" Relationship="StockDbModel.FK_OfferTransactions_PointTransactionId" FromRole="OfferTransactions" ToRole="PointTransactions" />
+          <NavigationProperty Name="OfferTransactionType" Relationship="StockDbModel.FK_OfferTransactions_TypeId" FromRole="OfferTransactions" ToRole="OfferTransactionType" />
+          <NavigationProperty Name="UserOfferDelivery" Relationship="StockDbModel.FK_UserOfferDelivery_OfferTransactionId" FromRole="OfferTransactions" ToRole="UserOfferDelivery" />
+        </EntityType>
+        <EntityType Name="OfferTransactionType">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="OfferId" Type="Int32" Nullable="false" />
-          <Property Name="StateId" Type="Int32" Nullable="false" />
-          <Property Name="OwnerUserId" Type="String" MaxLength="450" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUsers" Relationship="StockDbModel.FK_OfferItems_OwnerUserId" FromRole="OfferItems" ToRole="AspNetUsers" />
-          <NavigationProperty Name="Offer" Relationship="StockDbModel.FK_OfferItems_OfferId" FromRole="OfferItems" ToRole="Offer" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="OfferTransactions" Relationship="StockDbModel.FK_OfferTransactions_TypeId" FromRole="OfferTransactionType" ToRole="OfferTransactions" />
         </EntityType>
         <EntityType Name="Place">
           <Key>
@@ -513,15 +753,74 @@
           <NavigationProperty Name="Offer" Relationship="StockDbModel.FK_Offer_PlaceId" FromRole="Place" ToRole="Offer" />
           <NavigationProperty Name="AspNetUsers" Relationship="StockDbModel.PlaceUserPermissions" FromRole="Place" ToRole="AspNetUsers" />
         </EntityType>
-        <Association Name="FK_OfferItems_OwnerUserId">
+        <EntityType Name="PointTransactions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreateUserId" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
+          <Property Name="TypeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AspNetUsers" Relationship="StockDbModel.FK_PointTransactions_CreateUserId" FromRole="PointTransactions" ToRole="AspNetUsers" />
+          <NavigationProperty Name="AspNetUsers1" Relationship="StockDbModel.FK_PointTransactions_UserId" FromRole="PointTransactions" ToRole="AspNetUsers" />
+          <NavigationProperty Name="OfferTransactions" Relationship="StockDbModel.FK_OfferTransactions_PointTransactionId" FromRole="PointTransactions" ToRole="OfferTransactions" />
+          <NavigationProperty Name="PointTransactionType" Relationship="StockDbModel.FK_PointTransactions_TypeId" FromRole="PointTransactions" ToRole="PointTransactionType" />
+        </EntityType>
+        <EntityType Name="PointTransactionType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="PointTransactions" Relationship="StockDbModel.FK_PointTransactions_TypeId" FromRole="PointTransactionType" ToRole="PointTransactions" />
+        </EntityType>
+        <Association Name="FK_OfferTransactions_BuyUserId">
           <End Type="StockDbModel.AspNetUsers" Role="AspNetUsers" Multiplicity="0..1" />
-          <End Type="StockDbModel.OfferItems" Role="OfferItems" Multiplicity="*" />
+          <End Type="StockDbModel.OfferTransactions" Role="OfferTransactions" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AspNetUsers">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="OfferItems">
-              <PropertyRef Name="OwnerUserId" />
+            <Dependent Role="OfferTransactions">
+              <PropertyRef Name="BuyUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OfferTransactions_CreateUserId">
+          <End Type="StockDbModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1" />
+          <End Type="StockDbModel.OfferTransactions" Role="OfferTransactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OfferTransactions">
+              <PropertyRef Name="CreateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PointTransactions_CreateUserId">
+          <End Type="StockDbModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1" />
+          <End Type="StockDbModel.PointTransactions" Role="PointTransactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PointTransactions">
+              <PropertyRef Name="CreateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PointTransactions_UserId">
+          <End Type="StockDbModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1" />
+          <End Type="StockDbModel.PointTransactions" Role="PointTransactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PointTransactions">
+              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -537,15 +836,51 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_OfferItems_OfferId">
+        <Association Name="FK_OfferTransactions_OfferId">
           <End Type="StockDbModel.Offer" Role="Offer" Multiplicity="1" />
-          <End Type="StockDbModel.OfferItems" Role="OfferItems" Multiplicity="*" />
+          <End Type="StockDbModel.OfferTransactions" Role="OfferTransactions" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Offer">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="OfferItems">
+            <Dependent Role="OfferTransactions">
               <PropertyRef Name="OfferId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OfferTransactions_PointTransactionId">
+          <End Type="StockDbModel.PointTransactions" Role="PointTransactions" Multiplicity="0..1" />
+          <End Type="StockDbModel.OfferTransactions" Role="OfferTransactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PointTransactions">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OfferTransactions">
+              <PropertyRef Name="PointTransactionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OfferTransactions_TypeId">
+          <End Type="StockDbModel.OfferTransactionType" Role="OfferTransactionType" Multiplicity="1" />
+          <End Type="StockDbModel.OfferTransactions" Role="OfferTransactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OfferTransactionType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OfferTransactions">
+              <PropertyRef Name="TypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PointTransactions_TypeId">
+          <End Type="StockDbModel.PointTransactionType" Role="PointTransactionType" Multiplicity="1" />
+          <End Type="StockDbModel.PointTransactions" Role="PointTransactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PointTransactionType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PointTransactions">
+              <PropertyRef Name="TypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -553,7 +888,42 @@
           <End Type="StockDbModel.Place" Role="Place" Multiplicity="*" />
           <End Type="StockDbModel.AspNetUsers" Role="AspNetUsers" Multiplicity="*" />
         </Association>
-      </Schema>
+        <EntityType Name="UserOfferDelivery">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreateUserId" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="OfferTransactionId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AspNetUsers" Relationship="StockDbModel.FK_UserOfferDelivery_CreateUserId" FromRole="UserOfferDelivery" ToRole="AspNetUsers" />
+          <NavigationProperty Name="OfferTransactions" Relationship="StockDbModel.FK_UserOfferDelivery_OfferTransactionId" FromRole="UserOfferDelivery" ToRole="OfferTransactions" />
+        </EntityType>
+        <Association Name="FK_UserOfferDelivery_CreateUserId">
+          <End Type="StockDbModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1" />
+          <End Type="StockDbModel.UserOfferDelivery" Role="UserOfferDelivery" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserOfferDelivery">
+              <PropertyRef Name="CreateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserOfferDelivery_OfferTransactionId">
+          <End Type="StockDbModel.OfferTransactions" Role="OfferTransactions" Multiplicity="1" />
+          <End Type="StockDbModel.UserOfferDelivery" Role="UserOfferDelivery" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OfferTransactions">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserOfferDelivery">
+              <PropertyRef Name="OfferTransactionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -638,6 +1008,7 @@
               <ScalarProperty Name="Id" ColumnName="UserId" />
             </EndProperty>
           </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="BuyOfferProcedure" FunctionName="StockDbModel.Store.BuyOfferProcedure" />
           <EntitySetMapping Name="Offer">
             <EntityTypeMapping TypeName="StockDbModel.Offer">
               <MappingFragment StoreEntitySet="Offer">
@@ -650,12 +1021,24 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="OfferItems">
-            <EntityTypeMapping TypeName="StockDbModel.OfferItems">
-              <MappingFragment StoreEntitySet="OfferItems">
-                <ScalarProperty Name="OwnerUserId" ColumnName="OwnerUserId" />
-                <ScalarProperty Name="StateId" ColumnName="StateId" />
+          <EntitySetMapping Name="OfferTransactions">
+            <EntityTypeMapping TypeName="StockDbModel.OfferTransactions">
+              <MappingFragment StoreEntitySet="OfferTransactions">
+                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+                <ScalarProperty Name="PointTransactionId" ColumnName="PointTransactionId" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="BuyUserId" ColumnName="BuyUserId" />
                 <ScalarProperty Name="OfferId" ColumnName="OfferId" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OfferTransactionType">
+            <EntityTypeMapping TypeName="StockDbModel.OfferTransactionType">
+              <MappingFragment StoreEntitySet="OfferTransactionType">
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -673,6 +1056,26 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="PointTransactions">
+            <EntityTypeMapping TypeName="StockDbModel.PointTransactions">
+              <MappingFragment StoreEntitySet="PointTransactions">
+                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PointTransactionType">
+            <EntityTypeMapping TypeName="StockDbModel.PointTransactionType">
+              <MappingFragment StoreEntitySet="PointTransactionType">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <AssociationSetMapping Name="PlaceUserPermissions" TypeName="StockDbModel.PlaceUserPermissions" StoreEntitySet="PlaceUserPermissions">
             <EndProperty Name="AspNetUsers">
               <ScalarProperty Name="Id" ColumnName="UserId" />
@@ -681,6 +1084,16 @@
               <ScalarProperty Name="Id" ColumnName="PlaceId" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="UserOfferDelivery">
+            <EntityTypeMapping TypeName="StockDbModel.UserOfferDelivery">
+              <MappingFragment StoreEntitySet="UserOfferDelivery">
+                <ScalarProperty Name="OfferTransactionId" ColumnName="OfferTransactionId" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

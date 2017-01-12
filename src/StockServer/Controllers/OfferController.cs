@@ -38,35 +38,44 @@ namespace StockServer.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> PlaceOffers(int id)
         {
             string userId = _userManager.GetUserId(User);
 
-            var offers = await _offerProvider.GetAllForUserAsync(userId).ConfigureAwait(false);
+            var offers = await _offerProvider.GetAllAsync(userId, id);
 
-            var offersViewModels = offers.Select(t => _mapper.Map<OfferViewModel>(t)).ToList();
+            var offersVm = offers.Select(t => _mapper.Map<OfferViewModel>(t)).ToList();
 
-            return View(offersViewModels);
+            PlaceOffersViewModel plOffers = new PlaceOffersViewModel()
+            {
+                PlaceId = id,
+                Offers = offersVm
+            };
+
+            return View(plOffers);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> PlacePurchase(int placeId)
         {
             string userId = _userManager.GetUserId(User);
-            var places = await _placeProvider.GetShortPlaceForUserAsync(userId);
 
-            var createVm = new CreateEditOfferView()
-            {
-                Offer = new OfferViewModel(),
-                Places = new SelectList(places, "Id", "Name")
-            };
+            var purhase = await _offerProvider.GetPlacePurchase(userId, placeId);
 
-            return View(createVm);
+            return View(purhase);
+        }
+
+        [HttpGet]
+        public IActionResult Create(int placeId)
+        {
+            string userId = _userManager.GetUserId(User);
+            
+            return View(new OfferViewModel() { Id = placeId});
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind(Prefix = "Offer")] OfferViewModel offerVm)
+        public async Task<IActionResult> Create(OfferViewModel offerVm)
         {
             if (ModelState.IsValid)
             {
@@ -74,11 +83,44 @@ namespace StockServer.Controllers
                 string userId = _userManager.GetUserId(User);
 
                 await _offerProvider.CreateAsync(offer);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(PlaceOffers), new { id = offer.PlaceId, area = "" });
             }
             else
             {
                 return View(offerVm);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult AddOfferItems(int offerId, int placeId)
+        {
+            var viewModel = new AddOfferItemsViewModel() { OfferId = offerId, PlaceId = placeId };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddOfferItems(AddOfferItemsViewModel addVm)
+        {
+            if (ModelState.IsValid)
+            {
+                string userId = _userManager.GetUserId(User);
+
+                OfferTransaction tr = new OfferTransaction()
+                {
+                    CreateUserId = userId,
+                    OfferId = addVm.OfferId,
+                    Amount = addVm.Amount,
+                    Type = OfferTransactionType.Supply
+                };
+
+                await _offerProvider.AddTransactionAsync(tr);
+                
+                return RedirectToAction(nameof(PlaceOffers), new { id = addVm.PlaceId, area = "" });
+            }
+            else
+            {
+                return View(addVm);
             }
         }
     }

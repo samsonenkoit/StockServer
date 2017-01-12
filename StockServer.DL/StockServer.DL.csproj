@@ -82,10 +82,19 @@
     <Compile Include="Offer.cs">
       <DependentUpon>StockDbEfModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="OfferItems.cs">
+    <Compile Include="OfferTransactions.cs">
+      <DependentUpon>StockDbEfModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OfferTransactionType.cs">
       <DependentUpon>StockDbEfModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Place.cs">
+      <DependentUpon>StockDbEfModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PointTransactions.cs">
+      <DependentUpon>StockDbEfModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PointTransactionType.cs">
       <DependentUpon>StockDbEfModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -105,6 +114,9 @@
       <DependentUpon>StockDbEfModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="StockDbEntities.cs" />
+    <Compile Include="UserOfferDelivery.cs">
+      <DependentUpon>StockDbEfModel.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="StockDbEfModel.edmx">

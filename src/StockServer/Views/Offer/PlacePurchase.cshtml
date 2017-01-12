@@ -1,0 +1,43 @@
+﻿@model IEnumerable<StockServer.BL.Model.Purchase>
+
+@{
+    ViewData["Title"] = "Places";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Offer.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Transaction.Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Offer.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Transaction.Amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.Name)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

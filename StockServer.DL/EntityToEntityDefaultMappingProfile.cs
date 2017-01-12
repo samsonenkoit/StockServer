@@ -23,9 +23,19 @@ namespace StockServer.DL
                 (double)src.GeoPoint.Longitude)));
 
             CreateMap<BL.Model.Offer, DL.Offer>()
-                .ForMember(dest => dest.OfferItems, opt => opt.Ignore())
+                .ForMember(dest => dest.OfferTransactions, opt => opt.Ignore())
                 .ForMember(dest => dest.Place, opt => opt.Ignore());
-            CreateMap<DL.Offer, BL.Model.Offer>();
+            CreateMap<DL.Offer, BL.Model.Offer>()
+                .ForMember(dest => dest.AvailableAmount, opt => opt.Ignore());
+
+            CreateMap<BL.Model.OfferTransaction, DL.OfferTransactions>()
+                .ForMember(dest => dest.TypeId, opt => opt.MapFrom(src => (int)src.Type))
+                .ForMember(dest => dest.OfferTransactionType, opt => opt.Ignore())
+                .ForMember(dest => dest.AspNetUsers, opt => opt.Ignore())
+                .ForMember(dest => dest.AspNetUsers1, opt => opt.Ignore())
+                .ForMember(dest => dest.Offer, opt => opt.Ignore())
+                .ForMember(dest => dest.PointTransactions, opt => opt.Ignore())
+                .ForMember(dest => dest.UserOfferDelivery, opt => opt.Ignore());
         }
     }
 }

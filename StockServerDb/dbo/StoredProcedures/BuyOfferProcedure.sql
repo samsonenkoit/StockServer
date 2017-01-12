@@ -46,7 +46,8 @@ AS
 								select ot.OfferId, SUM(ot.Amount) as Amount from OfferTransactions ot
 								group by ot.OfferId
 								) as offerInf
-							where offerInf.OfferId = @offerId and offerInf.Amount >= @amount)
+							join dbo.Offer as offer on offerInf.OfferId = offer.Id
+							where offerInf.OfferId = @offerId and offerInf.Amount >= @amount and offer.IsActive = 1)
 	
 	--нет необходимого кол-ва товара
 	if(@availableOfferId is null)

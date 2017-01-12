@@ -27,12 +27,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Contact)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LogoUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ViewUrl)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -55,11 +49,11 @@
                 @Html.DisplayFor(modelItem => item.Contact)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LogoUrl)
+                <p>
+                    <a asp-action="PlaceOffers" asp-area="" asp-controller="offer" asp-route-id="@item.Id">Offers</a>
+                </p>
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ViewUrl)
-            </td>
+            
         </tr>
 }
     </tbody>

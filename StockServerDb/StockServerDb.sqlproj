@@ -79,6 +79,7 @@
     <Build Include="dbo\Tables\OfferTransactions.sql" />
     <Build Include="dbo\Tables\OfferTransactionType.sql" />
     <Build Include="dbo\StoredProcedures\BuyOfferProcedure.sql" />
+    <Build Include="dbo\Tables\UserOfferDelivery.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="dbo\Scripts\InsertPointTransactionTypeData.sql" />

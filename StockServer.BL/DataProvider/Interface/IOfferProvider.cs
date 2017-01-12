@@ -9,7 +9,9 @@ namespace StockServer.BL.DataProvider.Interface
 {
     public interface IOfferProvider
     {
-        Task<IList<Offer>> GetAllForUserAsync(string userId);
+        Task<IList<Offer>> GetAllAsync(string userId, int placeId);
+        Task<IList<Purchase>> GetPlacePurchase(string userId, int placeId);
         Task CreateAsync(Offer offer);
+        Task AddTransactionAsync(OfferTransaction transaction);
     }
 }
