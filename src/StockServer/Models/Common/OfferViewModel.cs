@@ -18,5 +18,7 @@ namespace StockServer.Models.Common
         public bool IsActive { get; set; }
         public int PlaceId { get; set; }
         public int AvailableAmount { get; set; }
+        [Required]
+        public string LogoUrl { get; set; }
     }
 }

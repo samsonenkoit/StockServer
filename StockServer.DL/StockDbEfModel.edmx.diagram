@@ -16,23 +16,23 @@
         <AssociationConnector Association="StockDbModel.FK_AspNetUserLogins_AspNetUsers_UserId" ManuallyRouted="false" />
         <AssociationConnector Association="StockDbModel.AspNetUserRoles" ManuallyRouted="false" />
         <EntityTypeShape EntityType="StockDbModel.Offer" Width="1.5" PointX="6" PointY="13.25" />
-        <EntityTypeShape EntityType="StockDbModel.OfferTransactions" Width="2.5" PointX="8.25" PointY="8" />
         <EntityTypeShape EntityType="StockDbModel.OfferTransactionType" Width="1.5" PointX="6" PointY="16.75" />
         <EntityTypeShape EntityType="StockDbModel.Place" Width="1.5" PointX="0.75" PointY="7.5" />
         <EntityTypeShape EntityType="StockDbModel.PointTransactions" Width="1.5" PointX="10.25" PointY="4.375" />
         <EntityTypeShape EntityType="StockDbModel.PointTransactionType" Width="1.5" PointX="8" PointY="2" />
-        <AssociationConnector Association="StockDbModel.FK_OfferTransactions_BuyUserId" />
-        <AssociationConnector Association="StockDbModel.FK_OfferTransactions_CreateUserId" />
         <AssociationConnector Association="StockDbModel.FK_PointTransactions_CreateUserId" />
         <AssociationConnector Association="StockDbModel.FK_PointTransactions_UserId" />
         <AssociationConnector Association="StockDbModel.FK_Offer_PlaceId" />
+        <AssociationConnector Association="StockDbModel.FK_PointTransactions_TypeId" />
+        <AssociationConnector Association="StockDbModel.PlaceUserPermissions" />
+        <EntityTypeShape EntityType="StockDbModel.OfferTransactions" Width="1.5" PointX="12.5" PointY="9.375" />
+        <EntityTypeShape EntityType="StockDbModel.UserOfferDelivery" Width="1.5" PointX="14.75" PointY="7.375" />
+        <AssociationConnector Association="StockDbModel.FK_OfferTransactions_BuyUserId" />
+        <AssociationConnector Association="StockDbModel.FK_OfferTransactions_CreateUserId" />
+        <AssociationConnector Association="StockDbModel.FK_UserOfferDelivery_CreateUserId" />
         <AssociationConnector Association="StockDbModel.FK_OfferTransactions_OfferId" />
         <AssociationConnector Association="StockDbModel.FK_OfferTransactions_PointTransactionId" />
         <AssociationConnector Association="StockDbModel.FK_OfferTransactions_TypeId" />
-        <AssociationConnector Association="StockDbModel.FK_PointTransactions_TypeId" />
-        <AssociationConnector Association="StockDbModel.PlaceUserPermissions" />
-        <EntityTypeShape EntityType="StockDbModel.UserOfferDelivery" Width="1.5" PointX="12.5" PointY="6.75" />
-        <AssociationConnector Association="StockDbModel.FK_UserOfferDelivery_CreateUserId" />
         <AssociationConnector Association="StockDbModel.FK_UserOfferDelivery_OfferTransactionId" />
       </Diagram>
     </edmx:Diagrams>

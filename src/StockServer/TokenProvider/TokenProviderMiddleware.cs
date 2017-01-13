@@ -51,24 +51,25 @@ namespace StockServer.TokenProvider
             var username = context.Request.Form["username"];
             var password = context.Request.Form["password"];
 
-            var identity = await GetIdentity(username, password);
-            if (identity == null)
+            var user = await ValidateUser(username, password);
+            if (user == null)
             {
                 context.Response.StatusCode = 400;
                 await context.Response.WriteAsync("Invalid username or password.");
                 return;
             }
-
+            
             DateTimeOffset now = DateTime.Now;
 
             // Specifically add the jti (random nonce), iat (issued timestamp), and sub (subject/user) claims.
             // You can add other claims here, if you want:
             var claims = new Claim[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, username),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, now.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
             };
+
 
             // Create the JWT and write it to a string
             var jwt = new JwtSecurityToken(
@@ -92,20 +93,21 @@ namespace StockServer.TokenProvider
             await context.Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
         }
 
-        private async Task<ClaimsIdentity> GetIdentity(string username, string password)
+        private async Task<ApplicationUser> ValidateUser(string username, string password)
         {
 
             var user = await _userManager.FindByNameAsync(username).ConfigureAwait(false);
 
             if(user == null)
-                return await Task.FromResult<ClaimsIdentity>(null);
+                return await Task.FromResult<ApplicationUser>(null);
 
             var isValid = await _userManager.CheckPasswordAsync(user, password).ConfigureAwait(false);
 
             if(!isValid)
-                return await Task.FromResult<ClaimsIdentity>(null);
+                return await Task.FromResult<ApplicationUser>(null);
 
-            return await Task.FromResult(new ClaimsIdentity(new System.Security.Principal.GenericIdentity(username, "Token"), new Claim[] { }));
+            // return await Task.FromResult(new ClaimsIdentity(new System.Security.Principal.GenericIdentity(username, "Token"), new Claim[] { }));
+            return user;
         }
 
     }

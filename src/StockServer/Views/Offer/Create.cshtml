@@ -6,13 +6,13 @@
 
 <h2>Create</h2>
 
-<form asp-action="Create" >
+<form asp-action="Create" asp-area="" >
     <div class="form-horizontal">
         <h4>OfferViewModel</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>     
         
-        @Html.HiddenFor(model => model.Id)   
+        @Html.HiddenFor(model => model.PlaceId)   
         <div class="form-group">
             <label asp-for="@Model.Title" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -25,6 +25,13 @@
             <div class="col-md-10">
                 <input asp-for="@Model.Description" class="form-control" />
                 <span asp-validation-for="@Model.Description" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.LogoUrl" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="@Model.LogoUrl" class="form-control" />
+                <span asp-validation-for="@Model.LogoUrl" class="text-danger" />
             </div>
         </div>
         <div class="form-group">
@@ -44,7 +51,7 @@
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" asp-area="" class="btn btn-default" />
             </div>
         </div>
     </div>

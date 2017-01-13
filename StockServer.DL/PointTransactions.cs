@@ -29,8 +29,8 @@ namespace StockServer.DL
     
         public virtual AspNetUsers AspNetUsers { get; set; }
         public virtual AspNetUsers AspNetUsers1 { get; set; }
+        public virtual PointTransactionType PointTransactionType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OfferTransactions> OfferTransactions { get; set; }
-        public virtual PointTransactionType PointTransactionType { get; set; }
     }
 }

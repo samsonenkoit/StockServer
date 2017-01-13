@@ -34,11 +34,11 @@ namespace StockServer.DL
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
         public virtual DbSet<Offer> Offer { get; set; }
-        public virtual DbSet<OfferTransactions> OfferTransactions { get; set; }
         public virtual DbSet<OfferTransactionType> OfferTransactionType { get; set; }
         public virtual DbSet<Place> Place { get; set; }
         public virtual DbSet<PointTransactions> PointTransactions { get; set; }
         public virtual DbSet<PointTransactionType> PointTransactionType { get; set; }
+        public virtual DbSet<OfferTransactions> OfferTransactions { get; set; }
         public virtual DbSet<UserOfferDelivery> UserOfferDelivery { get; set; }
     
         public virtual int BuyOfferProcedure(string createUserId, string buyUserId, Nullable<int> offerId, Nullable<System.DateTime> createDate, Nullable<int> amount)

@@ -12,5 +12,6 @@ namespace StockServer.BL.Model
         public decimal Price { get; set; }
         public bool IsActive { get; set; }
         public int AvailableAmount { get; set; }
+        public string LogoUrl { get; set; }
     }
 }

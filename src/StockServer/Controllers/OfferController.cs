@@ -42,7 +42,7 @@ namespace StockServer.Controllers
         {
             string userId = _userManager.GetUserId(User);
 
-            var offers = await _offerProvider.GetAllAsync(userId, id);
+            var offers = await _offerProvider.GetPlaceOffersAsync(userId, id);
 
             var offersVm = offers.Select(t => _mapper.Map<OfferViewModel>(t)).ToList();
 
@@ -60,7 +60,7 @@ namespace StockServer.Controllers
         {
             string userId = _userManager.GetUserId(User);
 
-            var purhase = await _offerProvider.GetPlacePurchase(userId, placeId);
+            var purhase = await _offerProvider.GetPurchaseAsync(userId, placeId);
 
             return View(purhase);
         }
@@ -68,8 +68,6 @@ namespace StockServer.Controllers
         [HttpGet]
         public IActionResult Create(int placeId)
         {
-            string userId = _userManager.GetUserId(User);
-            
             return View(new OfferViewModel() { Id = placeId});
         }
 

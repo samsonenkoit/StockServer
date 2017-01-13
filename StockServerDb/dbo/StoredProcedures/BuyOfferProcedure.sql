@@ -20,6 +20,8 @@ CREATE PROCEDURE [dbo].[BuyOfferProcedure]
 	@amount INT
 AS
 
+    SET NOCOUNT ON;
+
 	DECLARE @offersPointsCost INT
 	--вычисляем баллы необходимые для покупки
 	SET @offersPointsCost = (SELECT Price * @amount FROM Offer WHERE Id = @offerId)
@@ -69,4 +71,3 @@ AS
 
 	return 1
 
-RETURN 0

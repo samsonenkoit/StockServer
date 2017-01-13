@@ -5,6 +5,7 @@
 	[Price] [decimal](19, 2) NOT NULL,
 	[IsActive] [bit] NOT NULL DEFAULT ((1)),
 	[PlaceId] INT NOT NULL,
+	[LogoUrl] [nvarchar](max) NOT NULL,
 
 	CONSTRAINT FK_Offer_PlaceId FOREIGN KEY ([PlaceId]) REFERENCES Place(Id)
 	)
