@@ -163,49 +163,43 @@ namespace StockServer.DL.DataProvider
         public async Task<IList<Purchase>> GetPurchaseAsync(string userId, int? placeId)
         {
             var offersInfQuery = from user in _dbContext.AspNetUsers
-                                 join offerTr in _dbContext.OfferTransactions on user.Id equals offerTr.BuyUserId
-                                 join delivery in _dbContext.UserOfferDelivery.DefaultIfEmpty(null) on offerTr.Id equals delivery.OfferTransactionId
+                                 from offerTr in user.OfferTransactions
+                                 from delivery in offerTr.UserOfferDelivery.DefaultIfEmpty()
+                                     // join offerTr in _dbContext.OfferTransactions on user.Id equals offerTr.BuyUserId
+                                     // from delivery in offerTr.UserOfferDelivery.DefaultIfEmpty
+                                     // join delivery in _dbContext.UserOfferDelivery.DefaultIfEmpty(null) on offerTr.Id equals delivery.OfferTransactionId
                                  join offer in _dbContext.Offer on offerTr.OfferId equals offer.Id
                                  where delivery == null && offerTr.TypeId == (int)BL.Model.OfferTransactionType.Buy
                                  select new
                                  {
                                      UserId = user.Id,
                                      UserName = user.UserName,
+                                     CreateDate = offerTr.CreateDate,
+                                     OfferTitle = offer.Title,
                                      OfferId = offer.Id,
                                      PlaceId = offer.PlaceId,
-                                     OfferTitle = offer.Title,
                                      TransactionId = offerTr.Id,
-                                     Amount = offerTr.Amount,
-                                     TrType = offerTr.TypeId
+                                     Amount = Math.Abs(offerTr.Amount),
+                                     //TrType = offerTr.TypeId
                                  };
             if (!string.IsNullOrEmpty(userId))
                 offersInfQuery = offersInfQuery.Where(t => t.UserId == userId);
 
             if (placeId != null)
-                offersInfQuery = offersInfQuery.Where(t => t.PlaceId == placeId.Value);
+                offersInfQuery = offersInfQuery.Where(t => t.OfferId == placeId.Value);
 
             var offersInf = await offersInfQuery.ToListAsync();
 
             var purshase = offersInf.Select(t => new Purchase()
             {
-                User = new UserInfo()
-                {
-                    Id = t.UserId,
-                    Name = t.UserName
-                },
-                Offer = new OfferInfo()
-                {
-                    Id = t.OfferId,
-                    PlaceId = t.PlaceId,
-                    Title = t.OfferTitle
-                },
-                Transaction = new OfferTransaction()
-                {
-                    Id = t.TransactionId,
-                    OfferId = t.OfferId,
-                    Amount = t.Amount,
-                    Type = (BL.Model.OfferTransactionType)t.TrType
-                }
+                UserId = t.UserId,
+                UserName = t.UserName,
+                PurchaseDate = t.CreateDate,
+                OfferId = t.OfferId,
+                OfferTitle = t.OfferTitle,
+                OfferTransactionId = t.TransactionId,
+                Amount = t.Amount,
+                PlaceId = t.PlaceId
             }).ToList();
 
             return purshase;

@@ -25,7 +25,7 @@
         <AssociationConnector Association="StockDbModel.FK_Offer_PlaceId" />
         <AssociationConnector Association="StockDbModel.FK_PointTransactions_TypeId" />
         <AssociationConnector Association="StockDbModel.PlaceUserPermissions" />
-        <EntityTypeShape EntityType="StockDbModel.OfferTransactions" Width="1.5" PointX="12.5" PointY="9.375" />
+        <EntityTypeShape EntityType="StockDbModel.OfferTransactions" Width="2" PointX="12.5" PointY="9.375" />
         <EntityTypeShape EntityType="StockDbModel.UserOfferDelivery" Width="1.5" PointX="14.75" PointY="7.375" />
         <AssociationConnector Association="StockDbModel.FK_OfferTransactions_BuyUserId" />
         <AssociationConnector Association="StockDbModel.FK_OfferTransactions_CreateUserId" />

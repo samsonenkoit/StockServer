@@ -64,6 +64,8 @@ namespace StockServer.Areas.API.Controllers
             var userId = _userManager.GetUserId(User);
 
             var purchase = await _offerProvider.GetPurchaseAsync(userId, null);
+
+            return new ObjectResult(purchase);
         }
 
     }
