@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StockServer.Models.Common
+namespace StockServer.Models.Common.Error
 {
     public class ErrorViewModel
     {
