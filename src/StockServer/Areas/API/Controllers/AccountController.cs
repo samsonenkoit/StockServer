@@ -30,16 +30,34 @@ namespace StockServer.Areas.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel registerVm)
         {
-            if (!ModelState.IsValid)
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var user = new ApplicationUser { UserName = registerVm.Email, Email = registerVm.Email };
+                var result = await _userManager.CreateAsync(user);
+
+                if (result.Succeeded)
+                    return Ok();
+
+                AddErrors(result);
+                return BadRequest(ModelState);
+
+            }
+            catch
+            {
                 return BadRequest();
+            }
 
-            var user = new ApplicationUser { UserName = registerVm.Email, Email = registerVm.Email };
-            var result = await _userManager.CreateAsync(user);
+        }
 
-            if (!result.Succeeded)
-                return BadRequest();
-
-            return Ok();
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("regerror", error.Description);
+            }
         }
     }
 }

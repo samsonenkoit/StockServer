@@ -36,9 +36,17 @@ namespace StockServer.Areas.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetByPoint(double lat, double lon, double radius, int limit = 1000)
         {
-            var placePoints = await _placeProvider.GetShortPlaceInAreaAsync(new Geolocation(lat, lon), radius, limit);
+            try
+            {
+                var placePoints = await _placeProvider.GetShortPlaceInAreaAsync(new Geolocation(lat, lon), radius, limit);
 
-            return new ObjectResult(placePoints);
+                return new ObjectResult(placePoints);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+
         }
     }
 }

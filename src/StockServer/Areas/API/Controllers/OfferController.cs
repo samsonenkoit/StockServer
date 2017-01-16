@@ -11,6 +11,7 @@ using StockServer.Models;
 using StockServer.BL.Model;
 using StockServer.Models.OfferViewModels;
 using System.IdentityModel.Tokens.Jwt;
+using StockServer.Models.Common;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -39,33 +40,58 @@ namespace StockServer.Areas.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetByPoint(double lat, double lon, double radius, int limit = 1000)
         {
-            var placePoints = await _offerProvider.GetOffersInAreaAsync(new Geolocation(lat, lon), radius, limit);
+            try
+            {
+                var offerPoints = await _offerProvider.GetOffersInAreaAsync(new Geolocation(lat, lon), radius, limit);
 
-            return new ObjectResult(placePoints);   
+                return new ObjectResult(offerPoints);
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Buy(BuyOfferViewModel buyViewModel)
         {
-            if (!ModelState.IsValid)
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                var userId = _userManager.GetUserId(User);
+
+                var buyResult = await _offerProvider.BuyAsync(userId, buyViewModel.OfferId, buyViewModel.Amount);
+
+                if (buyResult == BuyOfferProcedureResult.Success)
+                    return Ok();
+                else
+                    return BadRequest(new ErrorViewModel((int)buyResult));
+                
+            }
+            catch
+            {
                 return BadRequest();
-
-            var userId = _userManager.GetUserId(User);
-            //string userId = User.Claims.First(t => t.Type == JwtRegisteredClaimNames.NameId).Value;
-            var buyResult = await _offerProvider.BuyAsync(userId, buyViewModel.OfferId, buyViewModel.Amount);
-
-            return new ObjectResult((int)buyResult);
+            }
 
         }
 
         [HttpGet]
         public async Task<IActionResult> PurchasedOffers()
         {
-            var userId = _userManager.GetUserId(User);
+            try
+            {
+                var userId = _userManager.GetUserId(User);
 
-            var purchase = await _offerProvider.GetPurchaseAsync(userId, null);
+                var purchase = await _offerProvider.GetPurchaseAsync(userId, null);
 
-            return new ObjectResult(purchase);
+                return new ObjectResult(purchase);
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
     }
