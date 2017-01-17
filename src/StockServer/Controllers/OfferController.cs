@@ -42,7 +42,7 @@ namespace StockServer.Controllers
         {
             string userId = _userManager.GetUserId(User);
 
-            var offers = await _offerProvider.GetPlaceOffersAsync(userId, id);
+            var offers = await _offerProvider.GetOffersAsync(userId, id);
 
             var offersVm = offers.Select(t => _mapper.Map<OfferViewModel>(t)).ToList();
 

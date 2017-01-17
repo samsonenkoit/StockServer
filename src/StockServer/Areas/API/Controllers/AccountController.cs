@@ -7,6 +7,9 @@ using StockServer.Models.AccountViewModels;
 using StockServer.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using StockServer.BL.DataProvider.Interface;
+using StockServer.Models.Common;
+using StockServer.BL.Model;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -18,12 +21,18 @@ namespace StockServer.Areas.API.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUserProvider _userProvider;
+        private readonly IOfferProvider _offerProvider;
 
-        public AccountController(UserManager<ApplicationUser> userManager)
+        public AccountController(UserManager<ApplicationUser> userManager, IUserProvider userProvider, IOfferProvider offerProvider)
         {
             if (userManager == null) throw new ArgumentNullException(nameof(userManager));
+            if (userProvider == null) throw new ArgumentNullException(nameof(userProvider));
+            if (offerProvider == null) throw new ArgumentNullException(nameof(offerProvider));
 
             _userManager = userManager;
+            _userProvider = userProvider;
+            _offerProvider = offerProvider;
         }
 
         [HttpPost]
@@ -52,6 +61,30 @@ namespace StockServer.Areas.API.Controllers
 
         }
 
+        public async Task<IActionResult> Info()
+        {
+            try
+            {
+                var userId = _userManager.GetUserId(User);
+                var userInfo = await _userProvider.GetInfoAsync(userId);
+                var purchase = await _offerProvider.GetPurchaseAsync(userId, null);
+
+                UserInfoAggregate info = new UserInfoAggregate()
+                {
+                    User = userInfo,
+                    Purchases = purchase.Cast<PurchaseInfo>().ToList()
+                };
+
+                return new ObjectResult(info);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        #region Help
+
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)
@@ -59,5 +92,7 @@ namespace StockServer.Areas.API.Controllers
                 ModelState.AddModelError("regerror", error.Description);
             }
         }
+
+        #endregion
     }
 }

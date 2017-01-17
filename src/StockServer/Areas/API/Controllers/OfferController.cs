@@ -12,6 +12,7 @@ using StockServer.BL.Model;
 using StockServer.Models.OfferViewModels;
 using System.IdentityModel.Tokens.Jwt;
 using StockServer.Models.Common;
+using StockServer.Models.Common.Error;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -43,8 +44,15 @@ namespace StockServer.Areas.API.Controllers
             try
             {
                 var offerPoints = await _offerProvider.GetOffersInAreaAsync(new Geolocation(lat, lon), radius, limit);
+                var areaItems = new AreaItemsList<Offer>()
+                {
+                    Latitude = lat,
+                    Longitude = lon,
+                    Radius = radius,
+                    Items = offerPoints.ToList()
+                };
 
-                return new ObjectResult(offerPoints);
+                return new ObjectResult(areaItems);
             }
             catch
             {
@@ -77,7 +85,7 @@ namespace StockServer.Areas.API.Controllers
 
         }
 
-        [HttpGet]
+        /*[HttpGet]
         public async Task<IActionResult> PurchasedOffers()
         {
             try
@@ -92,7 +100,7 @@ namespace StockServer.Areas.API.Controllers
             {
                 return BadRequest();
             }
-        }
+        }*/
 
     }
 }

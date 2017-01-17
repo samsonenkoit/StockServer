@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace StockServer.BL.Model
 {
-    public class ShortPlaceInfo
+    public class PlaceInfo
     {
         public int Id { get; set; }
-        public Geolocation GeoLocation { get; set; }
         public string Name { get; set; }
+        public Geolocation GeoLocation { get; set; }
 
-        public ShortPlaceInfo()
+        public PlaceInfo()
         {
 
         }
 
-        public ShortPlaceInfo(int id, Geolocation geolocation, string name)
+        public PlaceInfo(int id, string name, Geolocation geolocation)
         {
             Id = id;
-            GeoLocation = geolocation;
             Name = name;
+            GeoLocation = geolocation;
         }
     }
 }

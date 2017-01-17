@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="DataProvider\Interface\IOfferProvider.cs" />
     <Compile Include="DataProvider\Interface\IPlaceProvider.cs" />
+    <Compile Include="DataProvider\Interface\IUserProvider.cs" />
     <Compile Include="Model\BuyOfferProcedureResult.cs" />
     <Compile Include="Model\Geolocation.cs" />
     <Compile Include="Model\Offer.cs" />
@@ -49,7 +50,8 @@
     <Compile Include="Model\OfferTransaction.cs" />
     <Compile Include="Model\OfferTransactionType.cs" />
     <Compile Include="Model\Place.cs" />
-    <Compile Include="Model\ShortPlaceInfo.cs" />
+    <Compile Include="Model\PlaceInfo.cs" />
+    <Compile Include="Model\PurchaseInfo.cs" />
     <Compile Include="Model\UserInfo.cs" />
     <Compile Include="Model\Purchase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

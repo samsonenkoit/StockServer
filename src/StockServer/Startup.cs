@@ -59,13 +59,14 @@ namespace StockServer
                 .AddDefaultTokenProviders();
 
             services.AddMvc();
-
+            
             ConfigMapper();
             services.AddScoped<IMapper>(_ => Mapper.Instance);
             services.AddScoped<StockDbEntities>(_ => new StockDbEntities(Configuration.GetConnectionString("StockDbEfConnection")));
 
             services.AddTransient<IPlaceProvider, PlaceProvider>();
             services.AddTransient<IOfferProvider, OfferProvider>();
+            services.AddTransient<IUserProvider, UserProvider>();
 
 
             // Add application services.
@@ -127,6 +128,8 @@ namespace StockServer
                     template: "{controller=Place}/{action=Index}/{id?}",
                     defaults: new { area = ""});
             });
+
+
         }
 
     }

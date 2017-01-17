@@ -8,10 +8,8 @@ namespace StockServer.BL.Model
 {
     public class Offer: OfferInfo
     {
-        public string Description { get; set; }
         public decimal Price { get; set; }
         public bool IsActive { get; set; }
         public int AvailableAmount { get; set; }
-        public string LogoUrl { get; set; }
     }
 }

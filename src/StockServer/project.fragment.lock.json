@@ -5,16 +5,16 @@
       "type": "project",
       "framework": ".NETFramework,Version=v4.6.1",
       "compile": {
-        "bin/Debug/StockServer.DL.dll": {}
+        "bin/Release/StockServer.DL.dll": {}
       },
       "runtime": {
         "../packages/AutoMapper.5.2.0/lib/net45/AutoMapper.dll": {},
         "../packages/EntityFramework.6.1.3/lib/net45/EntityFramework.SqlServer.dll": {},
         "../packages/EntityFramework.6.1.3/lib/net45/EntityFramework.dll": {},
-        "bin/Debug/StockServer.DL.dll": {}
+        "bin/Release/StockServer.DL.dll": {}
       },
       "contentFiles": {
-        "bin/Debug/StockServer.DL.pdb": {
+        "bin/Release/StockServer.DL.pdb": {
           "buildAction": "None",
           "codeLanguage": "any",
           "copyToOutput": true
@@ -25,13 +25,13 @@
       "type": "project",
       "framework": ".NETFramework,Version=v4.6.1",
       "compile": {
-        "bin/Debug/StockServer.BL.dll": {}
+        "bin/Release/StockServer.BL.dll": {}
       },
       "runtime": {
-        "bin/Debug/StockServer.BL.dll": {}
+        "bin/Release/StockServer.BL.dll": {}
       },
       "contentFiles": {
-        "bin/Debug/StockServer.BL.pdb": {
+        "bin/Release/StockServer.BL.pdb": {
           "buildAction": "None",
           "codeLanguage": "any",
           "copyToOutput": true

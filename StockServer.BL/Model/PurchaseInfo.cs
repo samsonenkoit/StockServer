@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace StockServer.BL.Model
 {
-    public class Purchase: PurchaseInfo
+    public class PurchaseInfo
     {
-        public string UserId { get; set; }
-        public string UserName { get; set; }
+        public int OfferTransactionId { get; set; }
 
+        public int Amount { get; set; }
+
+        public OfferInfo Offer { get; set; }
     }
 }

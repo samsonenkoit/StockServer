@@ -46,6 +46,22 @@ namespace StockServer.DL.DataProvider
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task<BL.Model.Place> GetAsync(int id)
+        {
+            var placesDb = await (from pl in _dbContext.Place
+                            where pl.Id == id
+                            select pl).ToListAsync().ConfigureAwait(false);
+
+            var placeDb = placesDb.FirstOrDefault();
+
+            if (placesDb == null)
+                throw new Exception($"Place with id {id} not found");
+
+            var place = _mapper.Map<BL.Model.Place>(placeDb);
+
+            return place;
+        }
+
         public async Task<IList<BL.Model.Place>> GetForUserAsync(string userId)
         {
             var dbPlaces = await (from place in _dbContext.Place
@@ -57,20 +73,19 @@ namespace StockServer.DL.DataProvider
             return allPlaces;
         }
 
-        public async Task<IList<ShortPlaceInfo>> GetShortPlaceForUserAsync(string userId)
+      /*  public async Task<IList<PlaceInfo>> GetShortPlaceForUserAsync(string userId)
         {
             var dbShortPlaces = await (from place in _dbContext.Place
                                  from user in place.AspNetUsers
                                  where user.Id == userId
                                  select new { place.Id, place.GeoPoint, place.Name }).ToListAsync();
 
-            var shortPlaces = dbShortPlaces.Select(t => new ShortPlaceInfo(t.Id, new Geolocation((double)t.GeoPoint.Latitude,
-                (double)t.GeoPoint.Longitude), t.Name)).ToList();
+            var shortPlaces = dbShortPlaces.Select(t => new PlaceInfo(t.Id, t.Name)).ToList();
 
             return shortPlaces;
-        }
+        }*/
 
-        public async Task<IList<ShortPlaceInfo>> GetShortPlaceInAreaAsync(Geolocation geolocation, double radiusMetres, int limit)
+        public async Task<IList<PlaceInfo>> GetShortPlaceInAreaAsync(Geolocation geolocation, double radiusMetres, int limit)
         {
             var radiusSm = radiusMetres * 1000;
             DbGeography area = GeographyHelper.PointFromGeoPoint(geolocation).Buffer(radiusSm);
@@ -81,8 +96,7 @@ namespace StockServer.DL.DataProvider
 
             var points = await pointsQuery.ToListAsync();
 
-            return points.Select(t => new ShortPlaceInfo(t.Id, new Geolocation((double)t.GeoPoint.Latitude,
-                (double)t.GeoPoint.Longitude), t.Name)).ToList();
+            return points.Select(t => new PlaceInfo(t.Id,  t.Name, new Geolocation((double)t.GeoPoint.Latitude, (double)t.GeoPoint.Longitude))).ToList();
         }
     }
 }

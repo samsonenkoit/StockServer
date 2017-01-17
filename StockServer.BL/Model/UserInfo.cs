@@ -9,6 +9,7 @@ namespace StockServer.BL.Model
     public class UserInfo
     {
         public string Id { get; set; }
-        public string Name { get; set; }
+        public string Login { get; set; }
+        public double PointsAmount { get; set; }
     }
 }

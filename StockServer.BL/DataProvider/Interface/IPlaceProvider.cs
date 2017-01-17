@@ -11,7 +11,8 @@ namespace StockServer.BL.DataProvider.Interface
     {
         Task CreateAsync(string userId, Place place);
         Task<IList<Place>> GetForUserAsync(string userId);
-        Task<IList<ShortPlaceInfo>> GetShortPlaceInAreaAsync(Geolocation geolocation, double radiusMetres, int limit);
-        Task<IList<ShortPlaceInfo>> GetShortPlaceForUserAsync(string userId);
+        Task<IList<PlaceInfo>> GetShortPlaceInAreaAsync(Geolocation geolocation, double radiusMetres, int limit);
+        Task<Place> GetAsync(int id);
+        //Task<IList<PlaceInfo>> GetShortPlaceForUserAsync(string userId);
     }
 }

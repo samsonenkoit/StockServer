@@ -129,22 +129,31 @@ namespace StockServer.DL.DataProvider
             return offers.ToList();
         }
 
-        public async Task<IList<BL.Model.Offer>> GetPlaceOffersAsync(string userId, int placeId)
+        public async Task<IList<BL.Model.Offer>> GetOffersAsync(string userId, int? placeId)
         {
-            var dbOffers = await (from user in _dbContext.AspNetUsers
-                            from place in user.Place
-                            from offer in place.Offer
-                            where user.Id == userId && place.Id == placeId
-                            select new
-                            {
-                                Id = offer.Id,
-                                Title = offer.Title,
-                                Description = offer.Description,
-                                Price = offer.Price,
-                                IsActive = offer.IsActive,
-                                PlaceId = offer.PlaceId,
-                                AvailableAmount = offer.OfferTransactions.Select(t => t.Amount).DefaultIfEmpty(0).Sum()
-                            }).ToListAsync();
+
+            var query = from user in _dbContext.AspNetUsers
+                        from place in user.Place
+                        from offer in place.Offer
+                        select new
+                        {
+                            Id = offer.Id,
+                            Title = offer.Title,
+                            Description = offer.Description,
+                            Price = offer.Price,
+                            IsActive = offer.IsActive,
+                            PlaceId = offer.PlaceId,
+                            UserId = user.Id,
+                            AvailableAmount = offer.OfferTransactions.Select(t => t.Amount).DefaultIfEmpty(0).Sum()
+                        };
+
+            if (!string.IsNullOrEmpty(userId))
+                query = query.Where(t => t.UserId == userId);
+
+            if (placeId != null)
+                query = query.Where(t => t.PlaceId == placeId.Value);
+
+            var dbOffers = await query.ToListAsync();
 
             var offers = dbOffers.Select(t => new BL.Model.Offer()
             {
@@ -180,6 +189,8 @@ namespace StockServer.DL.DataProvider
                                      PlaceId = offer.PlaceId,
                                      TransactionId = offerTr.Id,
                                      Amount = Math.Abs(offerTr.Amount),
+                                     OfferDescription = offer.Description,
+                                     OfferLogo = offer.LogoUrl
                                      //TrType = offerTr.TypeId
                                  };
             if (!string.IsNullOrEmpty(userId))
@@ -189,17 +200,21 @@ namespace StockServer.DL.DataProvider
                 offersInfQuery = offersInfQuery.Where(t => t.OfferId == placeId.Value);
 
             var offersInf = await offersInfQuery.ToListAsync();
-
+            
             var purshase = offersInf.Select(t => new Purchase()
             {
                 UserId = t.UserId,
                 UserName = t.UserName,
-                PurchaseDate = t.CreateDate,
-                OfferId = t.OfferId,
-                OfferTitle = t.OfferTitle,
+                Offer = new OfferInfo()
+                {
+                    Id = t.OfferId,
+                    PlaceId = t.PlaceId,
+                    Title = t.OfferTitle,
+                    Description = t.OfferDescription,
+                    LogoUrl = t.OfferLogo
+                },
                 OfferTransactionId = t.TransactionId,
                 Amount = t.Amount,
-                PlaceId = t.PlaceId
             }).ToList();
 
             return purshase;
