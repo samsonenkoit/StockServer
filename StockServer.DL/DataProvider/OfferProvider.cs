@@ -95,7 +95,7 @@ namespace StockServer.DL.DataProvider
             _dbContext.Offer.Add(dbOffer);
             await _dbContext.SaveChangesAsync().ConfigureAwait(false);
         }
-
+/*
         public async Task<IList<BL.Model.Offer>> GetOffersInAreaAsync(Geolocation geolocation, double radiusMetres, int limit)
         {
             var radiusSm = radiusMetres * 1000;
@@ -128,8 +128,73 @@ namespace StockServer.DL.DataProvider
 
             return offers.ToList();
         }
+        */
+        public async Task<IList<BL.Model.Offer>> GetOffersAsync(Area area, string userId, int? placeId, bool? isActive, int? minItemsAmount, int? limit)
+        {
+            #region query
+            var query = from user in _dbContext.AspNetUsers
+                        from place in user.Place
+                        from offer in place.Offer
+                        select new
+                        {
+                            User = user,
+                            Place = place,
+                            Offer = offer,
+                            OfferAmount = offer.OfferTransactions.Select(t => t.Amount).DefaultIfEmpty(0).Sum()
+                        };
 
-        public async Task<IList<BL.Model.Offer>> GetOffersAsync(string userId, int? placeId)
+            if (area != null)
+            {
+                var radiusSm = area.Radius * 1000;
+                DbGeography dbArea = GeographyHelper.PointFromGeoPoint(area).Buffer(radiusSm);
+
+                query = query.Where(t => SqlSpatialFunctions.Filter(t.Place.GeoPoint, dbArea) == true);
+            }
+
+            if (!string.IsNullOrEmpty(userId))
+                query = query.Where(t => t.User.Id == userId);
+
+            if (placeId != null)
+                query = query.Where(t => t.Place.Id == placeId.Value);
+
+            if (isActive != null)
+                query = query.Where(t => t.Offer.IsActive == isActive.Value);
+
+            if (minItemsAmount != null)
+                query = query.Where(t => t.OfferAmount >= minItemsAmount.Value);
+
+            if (limit != null)
+                query = query.Take(limit.Value);
+
+            #endregion
+
+            var dbOffers = await query.Select(t =>
+            new
+            {
+                Id = t.Offer.Id,
+                Title = t.Offer.Title,
+                Description = t.Offer.Description,
+                Price = t.Offer.Price,
+                IsActive = t.Offer.IsActive,
+                PlaceId = t.Offer.PlaceId,
+                AvailableAmount = t.OfferAmount
+            }).ToListAsync().ConfigureAwait(false);
+
+            var offers = dbOffers.Select(t => new BL.Model.Offer()
+            {
+                Id = t.Id,
+                Title = t.Title,
+                Description = t.Description,
+                Price = t.Price,
+                IsActive = t.IsActive,
+                PlaceId = t.PlaceId,
+                AvailableAmount = t.AvailableAmount
+            });
+
+            return offers.ToList();
+        }
+
+     /*   public async Task<IList<BL.Model.Offer>> GetOffersAsync(string userId, int? placeId)
         {
 
             var query = from user in _dbContext.AspNetUsers
@@ -167,7 +232,7 @@ namespace StockServer.DL.DataProvider
             });
             
             return offers.ToList();
-        }
+        }*/
 
         public async Task<IList<Purchase>> GetPurchaseAsync(string userId, int? placeId)
         {

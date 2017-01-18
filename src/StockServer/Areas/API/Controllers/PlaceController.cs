@@ -68,7 +68,7 @@ namespace StockServer.Areas.API.Controllers
             try
             {
                 var placeInfo = await _placeProvider.GetAsync(id).ConfigureAwait(false);
-                var offers = await _offerProvider.GetOffersAsync(null, id);
+                var offers = await _offerProvider.GetOffersAsync(null, null, id, true, 1, null);
 
                 var aggregate = new PlaceInfoAggregate()
                 {

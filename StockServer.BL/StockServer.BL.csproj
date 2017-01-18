@@ -43,6 +43,7 @@
     <Compile Include="DataProvider\Interface\IOfferProvider.cs" />
     <Compile Include="DataProvider\Interface\IPlaceProvider.cs" />
     <Compile Include="DataProvider\Interface\IUserProvider.cs" />
+    <Compile Include="Model\Area.cs" />
     <Compile Include="Model\BuyOfferProcedureResult.cs" />
     <Compile Include="Model\Geolocation.cs" />
     <Compile Include="Model\Offer.cs" />

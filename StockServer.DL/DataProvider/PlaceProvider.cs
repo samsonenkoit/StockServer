@@ -73,18 +73,6 @@ namespace StockServer.DL.DataProvider
             return allPlaces;
         }
 
-      /*  public async Task<IList<PlaceInfo>> GetShortPlaceForUserAsync(string userId)
-        {
-            var dbShortPlaces = await (from place in _dbContext.Place
-                                 from user in place.AspNetUsers
-                                 where user.Id == userId
-                                 select new { place.Id, place.GeoPoint, place.Name }).ToListAsync();
-
-            var shortPlaces = dbShortPlaces.Select(t => new PlaceInfo(t.Id, t.Name)).ToList();
-
-            return shortPlaces;
-        }*/
-
         public async Task<IList<PlaceInfo>> GetShortPlaceInAreaAsync(Geolocation geolocation, double radiusMetres, int limit)
         {
             var radiusSm = radiusMetres * 1000;
