@@ -95,41 +95,22 @@ namespace StockServer.DL.DataProvider
             _dbContext.Offer.Add(dbOffer);
             await _dbContext.SaveChangesAsync().ConfigureAwait(false);
         }
-/*
-        public async Task<IList<BL.Model.Offer>> GetOffersInAreaAsync(Geolocation geolocation, double radiusMetres, int limit)
+
+        public Task DeliverPurchaseAsync(string createUserId, int offerTransactionId)
         {
-            var radiusSm = radiusMetres * 1000;
-            DbGeography area = GeographyHelper.PointFromGeoPoint(geolocation).Buffer(radiusSm);
-
-            var dbOffers = await (from place in _dbContext.Place
-                               from offer in place.Offer
-                               where SqlSpatialFunctions.Filter(place.GeoPoint, area) == true
-                               select new
-                               {
-                                   Id = offer.Id,
-                                   Title = offer.Title,
-                                   Description = offer.Description,
-                                   Price = offer.Price,
-                                   IsActive = offer.IsActive,
-                                   PlaceId = offer.PlaceId,
-                                   AvailableAmount = offer.OfferTransactions.Select(t => t.Amount).DefaultIfEmpty(0).Sum()
-                               }).Take(limit).ToListAsync();
-
-            var offers = dbOffers.Select(t => new BL.Model.Offer()
+            DL.UserOfferDelivery del = new UserOfferDelivery()
             {
-                Id = t.Id,
-                Title = t.Title,
-                Description = t.Description,
-                Price = t.Price,
-                IsActive = t.IsActive,
-                PlaceId = t.PlaceId,
-                AvailableAmount = t.AvailableAmount
-            });
+                CreateDate = DateTime.UtcNow,
+                CreateUserId = createUserId,
+                OfferTransactionId = offerTransactionId
+            };
 
-            return offers.ToList();
+            _dbContext.UserOfferDelivery.Add(del);
+            return _dbContext.SaveChangesAsync();
+
         }
-        */
-        public async Task<IList<BL.Model.Offer>> GetOffersAsync(Area area, string userId, int? placeId, bool? isActive, int? minItemsAmount, int? limit)
+
+        public async Task<IList<BL.Model.Offer>> GetOffersAsync(string ownerUserId, Area area, int? placeId, bool? isActive, int? minItemsAmount, int? limit)
         {
             #region query
             var query = from user in _dbContext.AspNetUsers
@@ -151,8 +132,8 @@ namespace StockServer.DL.DataProvider
                 query = query.Where(t => SqlSpatialFunctions.Filter(t.Place.GeoPoint, dbArea) == true);
             }
 
-            if (!string.IsNullOrEmpty(userId))
-                query = query.Where(t => t.User.Id == userId);
+            if (!string.IsNullOrEmpty(ownerUserId))
+                query = query.Where(t => t.User.Id == ownerUserId);
 
             if (placeId != null)
                 query = query.Where(t => t.Place.Id == placeId.Value);
@@ -194,79 +175,68 @@ namespace StockServer.DL.DataProvider
             return offers.ToList();
         }
 
-     /*   public async Task<IList<BL.Model.Offer>> GetOffersAsync(string userId, int? placeId)
+        public async Task<Purchase> GetPurchaseAsync(int offerTrId)
         {
+            var purchases = await GetPurchasesAsync(offerTrId, null, null, null, null).ConfigureAwait(false);
 
-            var query = from user in _dbContext.AspNetUsers
-                        from place in user.Place
-                        from offer in place.Offer
-                        select new
-                        {
-                            Id = offer.Id,
-                            Title = offer.Title,
-                            Description = offer.Description,
-                            Price = offer.Price,
-                            IsActive = offer.IsActive,
-                            PlaceId = offer.PlaceId,
-                            UserId = user.Id,
-                            AvailableAmount = offer.OfferTransactions.Select(t => t.Amount).DefaultIfEmpty(0).Sum()
-                        };
+            return purchases.FirstOrDefault();
+        }
 
-            if (!string.IsNullOrEmpty(userId))
-                query = query.Where(t => t.UserId == userId);
-
-            if (placeId != null)
-                query = query.Where(t => t.PlaceId == placeId.Value);
-
-            var dbOffers = await query.ToListAsync();
-
-            var offers = dbOffers.Select(t => new BL.Model.Offer()
-            {
-                Id = t.Id,
-                Title = t.Title,
-                Description = t.Description,
-                Price = t.Price,
-                IsActive = t.IsActive,
-                PlaceId = t.PlaceId,
-                AvailableAmount = t.AvailableAmount
-            });
-            
-            return offers.ToList();
-        }*/
-
-        public async Task<IList<Purchase>> GetPurchaseAsync(string userId, int? placeId)
+        public Task<IList<Purchase>> GetPurchasesAsync(string offerOwnerUserId, string buyUserId, int? placeId, bool? onlyNotDelivered)
         {
-            var offersInfQuery = from user in _dbContext.AspNetUsers
-                                 from offerTr in user.OfferTransactions
+            return GetPurchasesAsync(null, offerOwnerUserId, buyUserId, placeId, onlyNotDelivered);
+        }
+
+        private async Task<IList<Purchase>> GetPurchasesAsync(int? offerTrId, string offerOwnerUserId, string buyUserId, int? placeId, bool? onlyNotDelivered)
+        {
+            var query = from placeOwner in _dbContext.AspNetUsers
+                                 from place in placeOwner.Place
+                                 from offer in place.Offer
+                                 from offerTr in offer.OfferTransactions
                                  from delivery in offerTr.UserOfferDelivery.DefaultIfEmpty()
-                                     // join offerTr in _dbContext.OfferTransactions on user.Id equals offerTr.BuyUserId
-                                     // from delivery in offerTr.UserOfferDelivery.DefaultIfEmpty
-                                     // join delivery in _dbContext.UserOfferDelivery.DefaultIfEmpty(null) on offerTr.Id equals delivery.OfferTransactionId
-                                 join offer in _dbContext.Offer on offerTr.OfferId equals offer.Id
-                                 where delivery == null && offerTr.TypeId == (int)BL.Model.OfferTransactionType.Buy
+                                 join buyUser in _dbContext.AspNetUsers
+                                 on offerTr.BuyUserId equals buyUser.Id
+                                 where offerTr.TypeId == (int)BL.Model.OfferTransactionType.Buy
                                  select new
                                  {
-                                     UserId = user.Id,
-                                     UserName = user.UserName,
-                                     CreateDate = offerTr.CreateDate,
-                                     OfferTitle = offer.Title,
-                                     OfferId = offer.Id,
-                                     PlaceId = offer.PlaceId,
-                                     TransactionId = offerTr.Id,
-                                     Amount = Math.Abs(offerTr.Amount),
-                                     OfferDescription = offer.Description,
-                                     OfferLogo = offer.LogoUrl
-                                     //TrType = offerTr.TypeId
+                                     PlaceOwner = placeOwner,
+                                     Offer = offer,
+                                     Delivery = delivery,
+                                     OfferTr = offerTr,
+                                     BuyUser = buyUser
                                  };
-            if (!string.IsNullOrEmpty(userId))
-                offersInfQuery = offersInfQuery.Where(t => t.UserId == userId);
+
+            if (offerTrId != null)
+                query = query.Where(t => t.OfferTr.Id == offerTrId);
+
+            if (!string.IsNullOrEmpty(offerOwnerUserId))
+                query = query.Where(t => t.PlaceOwner.Id == offerOwnerUserId);
+
+            if (!string.IsNullOrEmpty(buyUserId))
+                query = query.Where(t => t.OfferTr.BuyUserId == buyUserId);
 
             if (placeId != null)
-                offersInfQuery = offersInfQuery.Where(t => t.OfferId == placeId.Value);
+                query = query.Where(t => t.Offer.PlaceId == placeId.Value);
 
-            var offersInf = await offersInfQuery.ToListAsync();
+            if (onlyNotDelivered != null)
+                query = query.Where(t => t.Delivery == null);
+
+            var dbPurchase = await query.Select(t => new
+            {
+                PlaceOwnerUserId = t.PlaceOwner.Id,
+                UserId = t.BuyUser.Id,
+                UserName = t.BuyUser.UserName,
+                CreateDate = t.OfferTr.CreateDate,
+                OfferTitle = t.Offer.Title,
+                OfferId = t.Offer.Id,
+                PlaceId = t.Offer.PlaceId,
+                TransactionId = t.OfferTr.Id,
+                Amount = Math.Abs(t.OfferTr.Amount),
+                OfferDescription = t.Offer.Description,
+                OfferLogo = t.Offer.LogoUrl
+            }).ToListAsync().ConfigureAwait(false);
             
-            var purshase = offersInf.Select(t => new Purchase()
+            var purshase = dbPurchase.Select(t => new Purchase()
             {
                 UserId = t.UserId,
                 UserName = t.UserName,

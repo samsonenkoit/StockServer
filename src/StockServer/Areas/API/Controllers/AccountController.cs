@@ -67,7 +67,7 @@ namespace StockServer.Areas.API.Controllers
             {
                 var userId = _userManager.GetUserId(User);
                 var userInfo = await _userProvider.GetInfoAsync(userId);
-                var purchase = await _offerProvider.GetPurchaseAsync(userId, null);
+                var purchase = await _offerProvider.GetPurchasesAsync(null, userId, null, true);
 
                 UserInfoAggregate info = new UserInfoAggregate()
                 {

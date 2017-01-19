@@ -16,10 +16,10 @@
                 @Html.DisplayNameFor(model => model.Offer.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Transaction.Amount)
+                @Html.DisplayNameFor(model => model.Amount)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User.Name)
+                @Html.DisplayNameFor(model => model.UserName)
             </th>
             <th></th>
         </tr>
@@ -32,10 +32,13 @@
                     @Html.DisplayFor(modelItem => item.Offer.Title)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Transaction.Amount)
+                    @Html.DisplayFor(modelItem => item.Amount)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.User.Name)
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    <a asp-action="DeliverPurchase" asp-area="" asp-route-offerTransactionId="@item.OfferTransactionId">Deliver</a>
                 </td>
             </tr>
         }

@@ -42,7 +42,7 @@ namespace StockServer.Controllers
         {
             string userId = _userManager.GetUserId(User);
 
-            var offers = await _offerProvider.GetOffersAsync(null, userId, id, null, null, null);
+            var offers = await _offerProvider.GetOffersAsync(userId, null, id, null, null, null);
 
             var offersVm = offers.Select(t => _mapper.Map<OfferViewModel>(t)).ToList();
 
@@ -55,12 +55,28 @@ namespace StockServer.Controllers
             return View(plOffers);
         }
 
+
+        public async Task<IActionResult> DeliverPurchase(int offerTransactionId)
+        {
+            var purchase = await _offerProvider.GetPurchaseAsync(offerTransactionId);
+            return View(purchase);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeliverPurchase(Purchase purchase)
+        {
+            string userId = _userManager.GetUserId(User);
+            await _offerProvider.DeliverPurchaseAsync(userId, purchase.OfferTransactionId);
+
+            return RedirectToAction("PlacePurchase", new { id = purchase.Offer.PlaceId, area = "" });
+        }
+
         [HttpGet]
-        public async Task<IActionResult> PlacePurchase(int placeId)
+        public async Task<IActionResult> PlacePurchase(int id)
         {
             string userId = _userManager.GetUserId(User);
 
-            var purhase = await _offerProvider.GetPurchaseAsync(userId, placeId);
+            var purhase = await _offerProvider.GetPurchasesAsync(userId, null, id, true);
 
             return View(purhase);
         }
@@ -121,5 +137,6 @@ namespace StockServer.Controllers
                 return View(addVm);
             }
         }
+
     }
 }

@@ -155,7 +155,7 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CreateDate" Type="datetime" Nullable="false" />
           <Property Name="CreateUserId" Type="nvarchar" MaxLength="450" Nullable="false" />
           <Property Name="OfferTransactionId" Type="int" Nullable="false" />

@@ -43,12 +43,12 @@ namespace StockServer.Areas.API.Controllers
         {
             try
             {
-                var offerPoints = await _offerProvider.GetOffersAsync(new Area()
+                var offerPoints = await _offerProvider.GetOffersAsync(null,new Area()
                 {
                     Latitude = lat,
                     Longitude = lon,
                     Radius = radius
-                }, null, null, true, 1, limit);
+                }, null, true, 1,limit);
 
                 var areaItems = new AreaItemsList<Offer>()
                 {
