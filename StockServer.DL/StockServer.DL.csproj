@@ -76,6 +76,7 @@
     <Compile Include="Converter.cs" />
     <Compile Include="DataProvider\OfferProvider.cs" />
     <Compile Include="DataProvider\PlaceProvider.cs" />
+    <Compile Include="DataProvider\PointTransactionProvider.cs" />
     <Compile Include="DataProvider\UserProvider.cs" />
     <Compile Include="DbConfig.cs" />
     <Compile Include="EntityToEntityDefaultMappingProfile.cs" />
@@ -115,6 +116,12 @@
       <DependentUpon>StockDbEfModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="StockDbEntities.cs" />
+    <Compile Include="UserActivity.cs">
+      <DependentUpon>StockDbEfModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserActivityType.cs">
+      <DependentUpon>StockDbEfModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="UserOfferDelivery.cs">
       <DependentUpon>StockDbEfModel.tt</DependentUpon>
     </Compile>

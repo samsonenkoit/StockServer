@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using StockServer.BL.DataProvider.Interface;
 using StockServer.Models;
 using System;
 using System.Collections.Generic;
@@ -17,14 +18,17 @@ namespace StockServer.TokenProvider
         private readonly RequestDelegate _next;
         private readonly TokenProviderOptions _options;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IPointTransactionProvider _pointProvider;
 
         public TokenProviderMiddleware(
             RequestDelegate next,
+            IPointTransactionProvider pointProvider,
             IOptions<TokenProviderOptions> options, UserManager<ApplicationUser> signInManager)
         {
             _next = next;
             _options = options.Value;
             _userManager = signInManager;
+            _pointProvider = pointProvider;
         }
 
         public Task Invoke(HttpContext context)
@@ -87,6 +91,9 @@ namespace StockServer.TokenProvider
                 access_token = encodedJwt,
                 expires_in = (int)_options.Expiration.TotalSeconds
             };
+
+            //TODO: Вынести начисление баллов из провайдера токенов
+            var pointTask = _pointProvider.EnrollmentPointsForAuthorizationIfNeedAsync(user.Id);
 
             // Serialize and return the response
             context.Response.ContentType = "application/json";

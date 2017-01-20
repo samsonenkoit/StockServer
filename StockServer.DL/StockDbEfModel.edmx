@@ -151,6 +151,22 @@
           <Property Name="Id" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="450" Nullable="false" />
         </EntityType>
+        <EntityType Name="UserActivity">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="450" Nullable="false" />
+          <Property Name="ActivityTypeId" Type="int" Nullable="false" />
+          <Property Name="DateTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserActivityType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="450" Nullable="false" />
+        </EntityType>
         <EntityType Name="UserOfferDelivery">
           <Key>
             <PropertyRef Name="Id" />
@@ -160,6 +176,18 @@
           <Property Name="CreateUserId" Type="nvarchar" MaxLength="450" Nullable="false" />
           <Property Name="OfferTransactionId" Type="int" Nullable="false" />
         </EntityType>
+        <Association Name="FK_ActivityTypeId">
+          <End Role="UserActivityType" Type="Self.UserActivityType" Multiplicity="1" />
+          <End Role="UserActivity" Type="Self.UserActivity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserActivityType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserActivity">
+              <PropertyRef Name="ActivityTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_AspNetRoleClaims_AspNetRoles_RoleId">
           <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -362,6 +390,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_UserActivity_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="UserActivity" Type="Self.UserActivity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserActivity">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_UserOfferDelivery_CreateUserId">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
           <End Role="UserOfferDelivery" Type="Self.UserOfferDelivery" Multiplicity="*" />
@@ -393,6 +433,9 @@
           <Parameter Name="createDate" Type="datetime" Mode="In" />
           <Parameter Name="amount" Type="int" Mode="In" />
         </Function>
+        <Function Name="EnrollmentPointsForActivityIfNeed" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="targetUserId" Type="nvarchar" Mode="In" />
+        </Function>
         <EntityContainer Name="StockDbModelStoreContainer">
           <EntitySet Name="AspNetRoleClaims" EntityType="Self.AspNetRoleClaims" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
@@ -408,7 +451,13 @@
           <EntitySet Name="PlaceUserPermissions" EntityType="Self.PlaceUserPermissions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PointTransactions" EntityType="Self.PointTransactions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PointTransactionType" EntityType="Self.PointTransactionType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserActivity" EntityType="Self.UserActivity" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserActivityType" EntityType="Self.UserActivityType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserOfferDelivery" EntityType="Self.UserOfferDelivery" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ActivityTypeId" Association="Self.FK_ActivityTypeId">
+            <End Role="UserActivityType" EntitySet="UserActivityType" />
+            <End Role="UserActivity" EntitySet="UserActivity" />
+          </AssociationSet>
           <AssociationSet Name="FK_AspNetRoleClaims_AspNetRoles_RoleId" Association="Self.FK_AspNetRoleClaims_AspNetRoles_RoleId">
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="AspNetRoleClaims" EntitySet="AspNetRoleClaims" />
@@ -472,6 +521,10 @@
           <AssociationSet Name="FK_PointTransactions_UserId" Association="Self.FK_PointTransactions_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="PointTransactions" EntitySet="PointTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserActivity_UserId" Association="Self.FK_UserActivity_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="UserActivity" EntitySet="UserActivity" />
           </AssociationSet>
           <AssociationSet Name="FK_UserOfferDelivery_CreateUserId" Association="Self.FK_UserOfferDelivery_CreateUserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -556,6 +609,7 @@
           <NavigationProperty Name="OfferTransactions" Relationship="StockDbModel.FK_OfferTransactions_BuyUserId" FromRole="AspNetUsers" ToRole="OfferTransactions" />
           <NavigationProperty Name="OfferTransactions1" Relationship="StockDbModel.FK_OfferTransactions_CreateUserId" FromRole="AspNetUsers" ToRole="OfferTransactions" />
           <NavigationProperty Name="UserOfferDelivery" Relationship="StockDbModel.FK_UserOfferDelivery_CreateUserId" FromRole="AspNetUsers" ToRole="UserOfferDelivery" />
+          <NavigationProperty Name="UserActivity" Relationship="StockDbModel.FK_UserActivity_UserId" FromRole="AspNetUsers" ToRole="UserActivity" />
           </EntityType>
         <EntityType Name="AspNetUserTokens">
           <Key>
@@ -699,6 +753,19 @@
             <End Role="OfferTransactions" EntitySet="OfferTransactions" />
             <End Role="UserOfferDelivery" EntitySet="UserOfferDelivery" />
           </AssociationSet>
+          <EntitySet Name="UserActivity" EntityType="StockDbModel.UserActivity" />
+          <EntitySet Name="UserActivityType" EntityType="StockDbModel.UserActivityType" />
+          <AssociationSet Name="FK_UserActivity_UserId" Association="StockDbModel.FK_UserActivity_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="UserActivity" EntitySet="UserActivity" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ActivityTypeId" Association="StockDbModel.FK_ActivityTypeId">
+            <End Role="UserActivityType" EntitySet="UserActivityType" />
+            <End Role="UserActivity" EntitySet="UserActivity" />
+          </AssociationSet>
+          <FunctionImport Name="EnrollmentPointsForActivityIfNeed">
+            <Parameter Name="targetUserId" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="Offer">
           <Key>
@@ -925,6 +992,49 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="UserActivity">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="ActivityTypeId" Type="Int32" Nullable="false" />
+          <Property Name="DateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="AspNetUsers" Relationship="StockDbModel.FK_UserActivity_UserId" FromRole="UserActivity" ToRole="AspNetUsers" />
+          <NavigationProperty Name="UserActivityType" Relationship="StockDbModel.FK_ActivityTypeId" FromRole="UserActivity" ToRole="UserActivityType" />
+        </EntityType>
+        <EntityType Name="UserActivityType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserActivity" Relationship="StockDbModel.FK_ActivityTypeId" FromRole="UserActivityType" ToRole="UserActivity" />
+        </EntityType>
+        <Association Name="FK_UserActivity_UserId">
+          <End Type="StockDbModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1" />
+          <End Type="StockDbModel.UserActivity" Role="UserActivity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserActivity">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ActivityTypeId">
+          <End Type="StockDbModel.UserActivityType" Role="UserActivityType" Multiplicity="1" />
+          <End Type="StockDbModel.UserActivity" Role="UserActivity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserActivityType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserActivity">
+              <PropertyRef Name="ActivityTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1097,6 +1207,25 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="UserActivity">
+            <EntityTypeMapping TypeName="StockDbModel.UserActivity">
+              <MappingFragment StoreEntitySet="UserActivity">
+                <ScalarProperty Name="DateTime" ColumnName="DateTime" />
+                <ScalarProperty Name="ActivityTypeId" ColumnName="ActivityTypeId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserActivityType">
+            <EntityTypeMapping TypeName="StockDbModel.UserActivityType">
+              <MappingFragment StoreEntitySet="UserActivityType">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="EnrollmentPointsForActivityIfNeed" FunctionName="StockDbModel.Store.EnrollmentPointsForActivityIfNeed" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

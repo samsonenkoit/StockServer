@@ -40,6 +40,8 @@ namespace StockServer.DL
         public virtual DbSet<PointTransactionType> PointTransactionType { get; set; }
         public virtual DbSet<OfferTransactions> OfferTransactions { get; set; }
         public virtual DbSet<UserOfferDelivery> UserOfferDelivery { get; set; }
+        public virtual DbSet<UserActivity> UserActivity { get; set; }
+        public virtual DbSet<UserActivityType> UserActivityType { get; set; }
     
         public virtual int BuyOfferProcedure(string createUserId, string buyUserId, Nullable<int> offerId, Nullable<System.DateTime> createDate, Nullable<int> amount)
         {
@@ -64,6 +66,15 @@ namespace StockServer.DL
                 new ObjectParameter("amount", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("BuyOfferProcedure", createUserIdParameter, buyUserIdParameter, offerIdParameter, createDateParameter, amountParameter);
+        }
+    
+        public virtual int EnrollmentPointsForActivityIfNeed(string targetUserId)
+        {
+            var targetUserIdParameter = targetUserId != null ?
+                new ObjectParameter("targetUserId", targetUserId) :
+                new ObjectParameter("targetUserId", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("EnrollmentPointsForActivityIfNeed", targetUserIdParameter);
         }
     }
 }

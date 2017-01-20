@@ -36,6 +36,13 @@ namespace StockServer.DL
                 .ForMember(dest => dest.Offer, opt => opt.Ignore())
                 .ForMember(dest => dest.PointTransactions, opt => opt.Ignore())
                 .ForMember(dest => dest.UserOfferDelivery, opt => opt.Ignore());
+
+            CreateMap<BL.Model.PointTransaction, DL.PointTransactions>()
+                .ForMember(dest => dest.TypeId, opt => opt.MapFrom(src => (int)src.Type))
+                .ForMember(dest => dest.AspNetUsers, opt => opt.Ignore())
+                .ForMember(dest => dest.AspNetUsers1, opt => opt.Ignore())
+                .ForMember(dest => dest.PointTransactionType, opt => opt.Ignore())
+                .ForMember(dest => dest.OfferTransactions, opt => opt.Ignore());
         }
     }
 }

@@ -67,6 +67,7 @@ namespace StockServer
             services.AddTransient<IPlaceProvider, PlaceProvider>();
             services.AddTransient<IOfferProvider, OfferProvider>();
             services.AddTransient<IUserProvider, UserProvider>();
+            services.AddTransient<IPointTransactionProvider, PointTransactionProvider>();
 
 
             // Add application services.

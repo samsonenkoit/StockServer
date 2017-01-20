@@ -34,6 +34,10 @@
         <AssociationConnector Association="StockDbModel.FK_OfferTransactions_PointTransactionId" />
         <AssociationConnector Association="StockDbModel.FK_OfferTransactions_TypeId" />
         <AssociationConnector Association="StockDbModel.FK_UserOfferDelivery_OfferTransactionId" />
+        <EntityTypeShape EntityType="StockDbModel.UserActivity" Width="1.5" PointX="7.75" PointY="7.875" />
+        <EntityTypeShape EntityType="StockDbModel.UserActivityType" Width="1.5" PointX="5.5" PointY="1.125" />
+        <AssociationConnector Association="StockDbModel.FK_UserActivity_UserId" />
+        <AssociationConnector Association="StockDbModel.FK_ActivityTypeId" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
