@@ -41,11 +41,12 @@ namespace StockServer.Areas.API.Controllers
         {
             try
             {
+
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
                 var user = new ApplicationUser { UserName = registerVm.Email, Email = registerVm.Email };
-                var result = await _userManager.CreateAsync(user);
+                var result = await _userManager.CreateAsync(user, registerVm.Password);
 
                 if (result.Succeeded)
                     return Ok();

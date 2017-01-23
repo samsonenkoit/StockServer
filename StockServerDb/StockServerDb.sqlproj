@@ -88,5 +88,6 @@
     <None Include="dbo\Scripts\InsertPointTransactionTypeData.sql" />
     <None Include="dbo\Scripts\InsertOfferTransactionTypeData.sql" />
     <None Include="dbo\Scripts\InsertUserActivityType.sql" />
+    <None Include="dbo\Scripts\DeleteAll.sql" />
   </ItemGroup>
 </Project>

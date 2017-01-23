@@ -13,7 +13,7 @@ using StockServer.Models.Common;
 
 namespace StockServer.Controllers
 {
-    [Authorize(ActiveAuthenticationSchemes = "T1")]
+    [Authorize(ActiveAuthenticationSchemes = "CookiesAuth")]
     public class PlaceController : Controller
     {
         private readonly IPlaceProvider _placeProvider;
@@ -56,7 +56,7 @@ namespace StockServer.Controllers
                 string userId = _userManager.GetUserId(User);               
 
                 await _placeProvider.CreateAsync(userId,pl);
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { area = ""});
             }
             else
             {

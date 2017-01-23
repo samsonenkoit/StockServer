@@ -14,7 +14,7 @@ using StockServer.Services;
 
 namespace StockServer.Controllers
 {
-    [Authorize]
+    [Authorize(ActiveAuthenticationSchemes = "CookiesAuth")]
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

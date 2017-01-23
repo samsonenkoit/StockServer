@@ -53,7 +53,12 @@ namespace StockServer
 
             services.AddIdentity<ApplicationUser, IdentityRole>(opt =>
             {
-                opt.Cookies.ApplicationCookie.AuthenticationScheme = "T1";
+                opt.Password.RequireDigit = false;
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequiredLength = 4;
+                opt.Cookies.ApplicationCookie.AuthenticationScheme = "CookiesAuth";
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
