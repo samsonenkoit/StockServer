@@ -17,7 +17,7 @@ AS
 	SET @currentDateTime = GETUTCDATE()
 
 	INSERT INTO dbo.PointTransactions (CreateUserId, CreateDate, UserId, Amount, TypeId)
-	SELECT @adminUserId, @currentDateTime, users.Id, 10, 1
+	SELECT @adminUserId, @currentDateTime, users.Id, 10, 2
 	FROM dbo.AspNetUsers as users
 	LEFT JOIN 
 		(SELECT UserId, ActivityTypeId, MAX(DateTime) as Dt  FROM dbo.UserActivity 
