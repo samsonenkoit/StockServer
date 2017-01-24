@@ -64,5 +64,27 @@ namespace StockServer.Controllers
             }
 
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Update(int id)
+        {
+            var place = await _placeProvider.GetAsync(id);
+            var plVm = _mapper.Map<PlaceViewModel>(place);
+
+            return View(plVm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(PlaceViewModel placeVm)
+        {
+            if (!ModelState.IsValid)
+                return View(placeVm);
+
+            var place = _mapper.Map<Place>(placeVm);
+            await _placeProvider.UpdateAsync(place);
+
+            return RedirectToAction("Index", new { area = "" });
+        }
     }
 }

@@ -13,6 +13,8 @@ namespace StockServer.BL.DataProvider.Interface
         Task<Purchase> GetPurchaseAsync(int offerTrId);
         Task CreateAsync(Offer offer);
         Task<IList<Offer>> GetOffersAsync(string ownerUserId, Area area, int? placeId, bool? isActive, int? minItemsAmount, int? limit);
+        Task<Offer> GetAsync(int id);
+        Task UpdateAsync(Offer offer);
         Task AddTransactionAsync(OfferTransaction transaction);
         Task DeliverPurchaseAsync(string createUserId, int offerTransactionId);
         Task<BuyOfferProcedureResult> BuyAsync(string userId, int offerId, int amount);

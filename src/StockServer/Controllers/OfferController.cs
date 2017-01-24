@@ -106,6 +106,28 @@ namespace StockServer.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Update(int id)
+        {
+            var offer = await _offerProvider.GetAsync(id);
+            var offerVm = _mapper.Map<OfferViewModel>(offer);
+
+            return View(offerVm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(OfferViewModel offerVm)
+        {
+            if (!ModelState.IsValid)
+                return View(offerVm);
+
+            var offer = _mapper.Map<Offer>(offerVm);
+            await _offerProvider.UpdateAsync(offer);
+
+            return RedirectToAction(nameof(PlaceOffers), new { id = offer.PlaceId, area = "" });
+        }
+
+        [HttpGet]
         public IActionResult AddOfferItems(int offerId, int placeId)
         {
             var viewModel = new AddOfferItemsViewModel() { OfferId = offerId, PlaceId = placeId };

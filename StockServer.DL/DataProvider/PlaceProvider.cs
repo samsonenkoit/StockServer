@@ -86,5 +86,16 @@ namespace StockServer.DL.DataProvider
 
             return points.Select(t => new PlaceInfo(t.Id,  t.Name, new Geolocation((double)t.GeoPoint.Latitude, (double)t.GeoPoint.Longitude))).ToList();
         }
+
+        public Task UpdateAsync(BL.Model.Place place)
+        {
+            if (place == null) throw new ArgumentNullException(nameof(place));
+
+            var dbPlace = _mapper.Map<DL.Place>(place);
+
+            _dbContext.Entry<DL.Place>(dbPlace).State = EntityState.Modified;
+
+            return _dbContext.SaveChangesAsync();
+        }
     }
 }

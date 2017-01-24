@@ -4,12 +4,49 @@
     ViewData["Title"] = "Places";
 }
 
-<h2>Index</h2>
+<h2>Places</h2>
 
 <p>
     <a asp-action="Create" asp-area="">Create New</a>
 </p>
-<table class="table">
+
+<ul class="list-group">
+    @foreach(var item in Model)
+    {
+        <li class="list-group-item">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-1">
+                        <div class="image">
+                            <img src="@item.LogoUrl" style="width:30px;height:30px" />
+                        </div>
+                    </div>
+                    <div class="col-xs-8">
+                        <div class="text-left">
+                            <strong>@item.Name</strong>
+                        </div>
+                    </div>
+                    <div class="col-xs-3">
+                        <div class="text-right button">
+                            <a asp-action="PlaceOffers" asp-area="" asp-controller="offer" asp-route-id="@item.Id">
+                                <span class="glyphicon glyphicon-gift" aria-hidden="true" style="font-size:20px"></span>
+                            </a>
+                            <a asp-action="PlacePurchase" asp-area="" asp-controller="offer" asp-route-id="@item.Id">
+                                <span class="glyphicon glyphicon-export" aria-hidden="true" style="font-size:20px"></span>
+                            </a>
+                            <a asp-action="Update" asp-area="" asp-controller="Place" asp-route-id="@item.Id">
+                                <span class="glyphicon glyphicon-pencil" aria-hidden="true" style="font-size:20px"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </li>
+
+    }
+</ul>
+<!--<table class="table">
     <thead>
         <tr>
             <th>
@@ -60,4 +97,4 @@
         </tr>
 }
     </tbody>
-</table>
+</table>-->

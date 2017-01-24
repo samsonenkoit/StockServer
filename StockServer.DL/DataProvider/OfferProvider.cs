@@ -110,7 +110,18 @@ namespace StockServer.DL.DataProvider
 
         }
 
-        public async Task<IList<BL.Model.Offer>> GetOffersAsync(string ownerUserId, Area area, int? placeId, bool? isActive, int? minItemsAmount, int? limit)
+        public async Task<BL.Model.Offer> GetAsync(int id)
+        {
+            var offers = await GetOffersAsync(id, null, null, null, null, null, null);
+            return offers.FirstOrDefault();
+        }
+
+        public Task<IList<BL.Model.Offer>> GetOffersAsync(string ownerUserId, Area area, int? placeId, bool? isActive, int? minItemsAmount, int? limit)
+        {
+            return GetOffersAsync(null, ownerUserId, area, placeId, isActive, minItemsAmount, limit);
+        }
+
+        private async Task<IList<BL.Model.Offer>> GetOffersAsync(int? offerId, string ownerUserId, Area area, int? placeId, bool? isActive, int? minItemsAmount, int? limit)
         {
             #region query
             var query = from user in _dbContext.AspNetUsers
@@ -131,6 +142,9 @@ namespace StockServer.DL.DataProvider
 
                 query = query.Where(t => SqlSpatialFunctions.Filter(t.Place.GeoPoint, dbArea) == true);
             }
+
+            if (offerId != null)
+                query = query.Where(t => t.Offer.Id == offerId.Value);
 
             if (!string.IsNullOrEmpty(ownerUserId))
                 query = query.Where(t => t.User.Id == ownerUserId);
@@ -158,7 +172,9 @@ namespace StockServer.DL.DataProvider
                 Price = t.Offer.Price,
                 IsActive = t.Offer.IsActive,
                 PlaceId = t.Offer.PlaceId,
-                AvailableAmount = t.OfferAmount
+                AvailableAmount = t.OfferAmount,
+                LogoUrl = t.Offer.LogoUrl
+                
             }).ToListAsync().ConfigureAwait(false);
 
             var offers = dbOffers.Select(t => new BL.Model.Offer()
@@ -169,7 +185,8 @@ namespace StockServer.DL.DataProvider
                 Price = t.Price,
                 IsActive = t.IsActive,
                 PlaceId = t.PlaceId,
-                AvailableAmount = t.AvailableAmount
+                AvailableAmount = t.AvailableAmount,
+                LogoUrl = t.LogoUrl
             });
 
             return offers.ToList();
@@ -255,5 +272,16 @@ namespace StockServer.DL.DataProvider
             return purshase;
         }
 
+        public Task UpdateAsync(BL.Model.Offer offer)
+        {
+            if (offer == null) throw new ArgumentNullException(nameof(offer));
+
+            var dbOffer = _mapper.Map<DL.Offer>(offer);
+            _dbContext.Entry(dbOffer).State = EntityState.Modified;
+            _dbContext.Entry(dbOffer).Property(t => t.Price).IsModified = false;
+            _dbContext.Entry(dbOffer).Property(t => t.PlaceId).IsModified = false;
+
+            return _dbContext.SaveChangesAsync();
+        }
     }
 }
