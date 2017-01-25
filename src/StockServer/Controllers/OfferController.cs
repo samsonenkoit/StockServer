@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace StockServer.Controllers
 {
-    [Authorize(ActiveAuthenticationSchemes = "CookiesAuth")]
+    [Authorize(ActiveAuthenticationSchemes = "CookiesAuth", Roles = "Partner,Admin")]
     public class OfferController : Controller
     {
         private readonly IOfferProvider _offerProvider;

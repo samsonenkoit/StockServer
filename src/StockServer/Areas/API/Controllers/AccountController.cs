@@ -21,18 +21,22 @@ namespace StockServer.Areas.API.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
+       // private readonly RoleManager<Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole> _roleManager;
         private readonly IUserProvider _userProvider;
         private readonly IOfferProvider _offerProvider;
 
-        public AccountController(UserManager<ApplicationUser> userManager, IUserProvider userProvider, IOfferProvider offerProvider)
+        public AccountController(UserManager<ApplicationUser> userManager,
+            IUserProvider userProvider, IOfferProvider offerProvider)
         {
             if (userManager == null) throw new ArgumentNullException(nameof(userManager));
             if (userProvider == null) throw new ArgumentNullException(nameof(userProvider));
             if (offerProvider == null) throw new ArgumentNullException(nameof(offerProvider));
+         //   if (roleManager == null) throw new ArgumentNullException(nameof(roleManager));
 
             _userManager = userManager;
             _userProvider = userProvider;
             _offerProvider = offerProvider;
+           // _roleManager = roleManager;
         }
 
         [HttpPost]
@@ -49,7 +53,10 @@ namespace StockServer.Areas.API.Controllers
                 var result = await _userManager.CreateAsync(user, registerVm.Password);
 
                 if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, "User");
                     return Ok();
+                }
 
                 AddErrors(result);
                 return BadRequest(ModelState);

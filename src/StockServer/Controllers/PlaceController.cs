@@ -13,7 +13,7 @@ using StockServer.Models.Common;
 
 namespace StockServer.Controllers
 {
-    [Authorize(ActiveAuthenticationSchemes = "CookiesAuth")]
+    [Authorize(ActiveAuthenticationSchemes = "CookiesAuth", Roles = "Partner,Admin")]
     public class PlaceController : Controller
     {
         private readonly IPlaceProvider _placeProvider;

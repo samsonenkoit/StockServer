@@ -63,6 +63,7 @@ namespace StockServer
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+
             services.AddMvc();
             
             ConfigMapper();
