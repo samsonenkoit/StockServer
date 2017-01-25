@@ -29,13 +29,13 @@
                     <div class="col-xs-3">
                         <div class="text-right button">
                             <a asp-action="PlaceOffers" asp-area="" asp-controller="offer" asp-route-id="@item.Id">
-                                <span class="glyphicon glyphicon-gift" aria-hidden="true" style="font-size:20px"></span>
+                                <span class="glyphicon glyphicon-gift listitem-action" aria-hidden="true" ></span>
                             </a>
                             <a asp-action="PlacePurchase" asp-area="" asp-controller="offer" asp-route-id="@item.Id">
-                                <span class="glyphicon glyphicon-export" aria-hidden="true" style="font-size:20px"></span>
+                                <span class="glyphicon glyphicon-export listitem-action" aria-hidden="true" ></span>
                             </a>
                             <a asp-action="Update" asp-area="" asp-controller="Place" asp-route-id="@item.Id">
-                                <span class="glyphicon glyphicon-pencil" aria-hidden="true" style="font-size:20px"></span>
+                                <span class="glyphicon glyphicon-pencil listitem-action" aria-hidden="true" ></span>
                             </a>
                         </div>
                     </div>
@@ -46,55 +46,5 @@
 
     }
 </ul>
-<!--<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Latitude)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Longitude)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Contact)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Latitude)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Longitude)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Contact)
-            </td>
-            <td>
-                <p>
-                    <a asp-action="PlaceOffers" asp-area="" asp-controller="offer" asp-route-id="@item.Id">Offers</a>
-                </p>
-                <p>
-                    <a asp-action="PlacePurchase" asp-area="" asp-controller="offer" asp-route-id="@item.Id">Purchase</a>
-                </p>
-            </td>
-            
-        </tr>
-}
-    </tbody>
-</table>-->
+
+

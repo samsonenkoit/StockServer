@@ -1,25 +1,25 @@
 ﻿@model IEnumerable<StockServer.BL.Model.Purchase>
 
 @{
-    ViewData["Title"] = "Places";
+    ViewData["Title"] = "Purchases";
 }
 
-<h2>Index</h2>
+<h2>Purchases</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Offer.Title)
+                Offer
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Amount)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UserName)
+                User
+            </th>
+            <th>
+                Amount
             </th>
             <th></th>
         </tr>
@@ -29,16 +29,23 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Offer.Title)
+                    <div class="image">
+                        <img src="@item.Offer.LogoUrl" style="width:30px;height:30px" />
+                    </div>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Amount)
+                    @Html.DisplayFor(modelItem => item.Offer.Title)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.UserName)
                 </td>
                 <td>
-                    <a asp-action="DeliverPurchase" asp-area="" asp-route-offerTransactionId="@item.OfferTransactionId">Deliver</a>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    <a asp-action="DeliverPurchase" asp-area="" asp-route-offerTransactionId="@item.OfferTransactionId">
+                        <span class="glyphicon glyphicon-export listitem-action" aria-hidden="true"></span>
+                    </a>
                 </td>
             </tr>
         }

@@ -460,7 +460,7 @@ namespace StockServer.Controllers
             }
             else
             {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                return RedirectToAction(nameof(PlaceController.Index), "Place", new { area = ""});
             }
         }
 

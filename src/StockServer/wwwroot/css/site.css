@@ -41,6 +41,16 @@ textarea {
     width: 100%;
 }
 
+.listitem-action {
+    font-size: 20px;
+    color: black;
+    margin: 0px 0px 0px 6px;
+}
+
+.listitem-action:hover{
+    color: forestgreen
+}
+
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
   /* Hide captions */

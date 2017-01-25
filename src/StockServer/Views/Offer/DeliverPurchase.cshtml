@@ -4,27 +4,30 @@
     ViewData["Title"] = "Delivery";
 }
 
-<h2>Create</h2>
+<h2>Delivery</h2>
 
 <form asp-action="DeliverPurchase" asp-area="">
     <div class="form-horizontal">
-        <h4>Purchase</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-        @Html.HiddenFor(model => model.Offer.PlaceId);
-        @Html.HiddenFor(model => model.OfferTransactionId);
+        @Html.HiddenFor(model => model.Offer.PlaceId)
+        @Html.HiddenFor(model => model.OfferTransactionId)
         <div class="form-group">
-            <label asp-for="@Model.Offer.Title" class="col-md-2 control-label"></label>
-            <label>@Model.Offer.Title</label>
+            <label class="col-md-2 control-label">Offer name:</label>
+            @Model.Offer.Title
         </div>
         <div class="form-group">
-            <label asp-for="@Model.Offer.Description" class="col-md-2 control-label"></label>
-            <label>@Model.Offer.Description</label>
+            <label class="col-md-2 control-label">Offer description:</label>
+            @Model.Offer.Description
         </div>
         <div class="form-group">
-            <label asp-for="@Model.Amount" class="col-md-2 control-label"></label>
-            <label>@Model.Amount</label>
+            <label class="col-md-2 control-label">Amount:</label>
+            @Model.Amount
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">User:</label>
+            @Model.UserName
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -35,7 +38,7 @@
 </form>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="PlacePurchase" asp-area="" asp-route-id="@Model.Offer.PlaceId">Back to List</a>
 </div>
 
 @section Scripts {

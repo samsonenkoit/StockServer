@@ -1,13 +1,13 @@
 ﻿@model StockServer.Models.Common.PlaceViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
 }
 
 
 <form asp-action="Update" asp-area="">
     <div class="form-horizontal">
-        <h4>PlaceViewModel</h4>
+        <h4>Edit place</h4>
         <hr />
         @Html.HiddenFor(model => model.Id)
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -69,7 +69,7 @@
 </form>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" asp-area="">Back to List</a>
 </div>
 
 @section Scripts {
