@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace StockServer.DL
 {
     internal class Converter
+
     {
         internal static BL.Model.Place ToPlace(DL.Place place)
         {
