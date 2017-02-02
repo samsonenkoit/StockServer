@@ -47,7 +47,7 @@ namespace StockServer.Areas.API.Controllers
                 {
                     Latitude = lat,
                     Longitude = lon,
-                    Radius = radius
+                    RadiusMeters = radius
                 }, null, true, 1,limit);
 
                 var areaItems = new AreaItemsList<Offer>()

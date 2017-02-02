@@ -123,6 +123,7 @@
           <Property Name="Contact" Type="nvarchar(max)" />
           <Property Name="LogoUrl" Type="nvarchar(max)" />
           <Property Name="ViewUrl" Type="nvarchar(max)" />
+          <Property Name="Description" Type="nvarchar(max)" />
           <Property Name="GeoPoint" Type="geography" Nullable="false" />
         </EntityType>
         <EntityType Name="PlaceUserPermissions">
@@ -764,7 +765,7 @@
             <End Role="UserActivity" EntitySet="UserActivity" />
           </AssociationSet>
           <FunctionImport Name="EnrollmentPointsForActivityIfNeed">
-            <Parameter Name="targetUserId" Mode="In" Type="String" />
+          <Parameter Name="targetUserId" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="Offer">
@@ -802,6 +803,7 @@
           <Property Name="GeoPoint" Type="Geography" Nullable="false" />
           <NavigationProperty Name="Offer" Relationship="StockDbModel.FK_Offer_PlaceId" FromRole="Place" ToRole="Offer" />
           <NavigationProperty Name="AspNetUsers" Relationship="StockDbModel.PlaceUserPermissions" FromRole="Place" ToRole="AspNetUsers" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="PointTransactions">
           <Key>
@@ -1145,6 +1147,7 @@
           <EntitySetMapping Name="Place">
             <EntityTypeMapping TypeName="StockDbModel.Place">
               <MappingFragment StoreEntitySet="Place">
+                <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="GeoPoint" ColumnName="GeoPoint" />
                 <ScalarProperty Name="ViewUrl" ColumnName="ViewUrl" />
                 <ScalarProperty Name="LogoUrl" ColumnName="LogoUrl" />

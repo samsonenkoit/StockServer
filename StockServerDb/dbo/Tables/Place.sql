@@ -7,6 +7,7 @@ CREATE TABLE [dbo].[Place](
 	[Contact] [nvarchar](max) NULL,
 	[LogoUrl] [nvarchar](max) NULL,
 	[ViewUrl] [nvarchar](max) NULL,
+	[Description] [nvarchar](max) NULL,
 	[GeoPoint] [geography] NOT NULL
 )
 

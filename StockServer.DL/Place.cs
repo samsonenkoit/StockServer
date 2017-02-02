@@ -28,6 +28,7 @@ namespace StockServer.DL
         public string LogoUrl { get; set; }
         public string ViewUrl { get; set; }
         public System.Data.Entity.Spatial.DbGeography GeoPoint { get; set; }
+        public string Description { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Offer> Offer { get; set; }

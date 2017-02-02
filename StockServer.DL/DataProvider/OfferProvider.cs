@@ -137,7 +137,7 @@ namespace StockServer.DL.DataProvider
 
             if (area != null)
             {
-                var radiusSm = area.Radius * 1000;
+                var radiusSm = area.RadiusMeters * 100;
                 DbGeography dbArea = GeographyHelper.PointFromGeoPoint(area).Buffer(radiusSm);
 
                 query = query.Where(t => SqlSpatialFunctions.Filter(t.Place.GeoPoint, dbArea) == true);

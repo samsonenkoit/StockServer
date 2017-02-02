@@ -36,5 +36,8 @@ namespace StockServer.Models.Common
         
         [Required]
         public string ViewUrl { get; set; }
+
+        [Required]
+        public string Description { get; set; }
     }
 }

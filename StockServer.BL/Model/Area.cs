@@ -8,6 +8,6 @@ namespace StockServer.BL.Model
 {
     public class Area: Geolocation
     {
-        public double Radius { get; set; }
+        public double RadiusMeters { get; set; }
     }
 }
