@@ -14,7 +14,7 @@ namespace StockServer.TokenProvider
 
         public string Audience { get; set; }
 
-        public TimeSpan Expiration { get; set; } = TimeSpan.FromMinutes(120);
+        public TimeSpan Expiration { get; set; } = TimeSpan.FromMinutes(2880);
 
         public SigningCredentials SigningCredentials { get; set; }
     }
