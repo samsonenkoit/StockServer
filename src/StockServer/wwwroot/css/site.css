@@ -1,5 +1,5 @@
 ﻿body {
-    padding-top: 50px;
+    padding-top: 26px;
     padding-bottom: 20px;
 }
 
@@ -21,6 +21,37 @@ textarea {
 .carousel-caption p {
     font-size: 20px;
     line-height: 1.4;
+}
+
+/*navbar*/
+.st-navbar p{
+    margin: 15px 0px 0px 0px;
+    font-size: 20px;
+}
+
+/*offer list*/
+
+.st-list{
+    padding: 10px;
+}
+
+.st-list-item{
+    margin-bottom: 3px;
+    border-radius: 4px;
+}
+
+.st-list-item img{
+    height: 30px;
+    width: 30px;
+}
+
+.st-list-item strong{
+    margin-left: 15px;
+    font-size: 17px;
+}
+
+.st-list-item p{
+    margin-top: 10px;
 }
 
 /* buttons and links extension to use brackets: [ click me ] */
@@ -49,6 +80,10 @@ textarea {
 
 .listitem-action:hover{
     color: forestgreen
+}
+
+#map {
+    height: 500px;
 }
 
 /* Hide/rearrange for smaller screens */

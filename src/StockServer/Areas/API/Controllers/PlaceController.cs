@@ -38,6 +38,7 @@ namespace StockServer.Areas.API.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByPoint(double lat, double lon, double radius, int limit = 1000)
         {
             try
@@ -63,6 +64,7 @@ namespace StockServer.Areas.API.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Info(int id)
         {
             try

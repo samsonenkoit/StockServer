@@ -117,7 +117,16 @@ namespace StockServer
                 }
             }));
 
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                OnPrepareResponse = (context) =>
+                {
+                    // Disable caching for all static files.
+                    context.Context.Response.Headers["Cache-Control"] = "no-cache, nostore";
+                    context.Context.Response.Headers["Pragma"] = "no-cache";
+                    context.Context.Response.Headers["Expires"] = "-1";
+                }
+            });
 
             ConfigureAuth(app);
 
@@ -132,8 +141,10 @@ namespace StockServer
                 
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Place}/{action=Index}/{id?}",
+                    template: "{controller=Home}/{action=Index}/{id?}",
                     defaults: new { area = ""});
+
+                routes.MapSpaFallbackRoute("spa-fallback", new { controller = "Home", action = "Index" });
             });
 
 

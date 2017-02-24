@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <!--<div class="menu">
+        <a [routerLink]="['Offers']">Offers</a>
+        <a [routerLink]="['']">Places</a>
+        <a [routerLink]="['UserInfo']">Office</a>
+    </div>-->
+    
+    <nav class="navbar navbar-default navbar-fixed-top
+          row st-navbar">
+        <div class="col-xs-4">
+            <p class="text-center">
+                <a [routerLink]="['Offers']">
+                    <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                </a>
+            </p>
+        </div>
+        <div class="col-xs-4">
+            <p class="text-center">
+                <a [routerLink]="['']">
+                    <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
+                </a>
+            </p>
+        </div>
+        <div class="col-xs-4">
+            <p class="text-center">
+                <a [routerLink]="['UserInfo']">
+                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                </a>
+            </p>
+        </div>
+    </nav>
+
+    <router-outlet></router-outlet>
+</body>
+
+</html>

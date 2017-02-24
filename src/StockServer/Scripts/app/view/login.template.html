@@ -1,0 +1,10 @@
+﻿<form [formGroup]="loginForm" (submit)="performLogin($event)">
+    <input formControlName="username" type="text" />
+    <input formControlName="password" type="password" />
+    <div>
+        <label>
+            <input type="checkbox" value="remember" /> Remember me
+        </label>
+    </div>
+    <button class="btn" type="submit"></button>
+</form>
